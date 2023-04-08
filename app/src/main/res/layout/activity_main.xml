@@ -163,7 +163,7 @@
             android:layout_weight="1"
             android:gravity="start"
             android:text="Marceli"
-            android:textColor="@android:color/holo_purple"
+            android:textColor="#ffaa66cc"
             android:textSize="20sp" />
 
         <TextView

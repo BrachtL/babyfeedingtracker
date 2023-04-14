@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">Baby Feeding Tracker</string>
+
+    <string name="username5">username</string>
+    <string name="username4">username</string>
+    <string name="username3">username</string>
+    <string name="username2">username</string>
+    <string name="username1">username</string>
+    <string name="username0">username</string>
+
+    <string name="time5">23:59</string>
+    <string name="time4">23:59</string>
+    <string name="time3">23:59</string>
+    <string name="time2">23:59</string>
+    <string name="time1">23:59</string>
+    <string name="time0">23:59</string>
+
+    <string name="amount5">999ml</string>
+    <string name="amount4">999ml</string>
+    <string name="amount3">999ml</string>
+    <string name="amount2">999ml</string>
+    <string name="amount1">999ml</string>
+    <string name="amount0">999ml</string>
+
+    <string name="average06">06h: 12.3</string>
+    <string name="average12">12h: 12.3</string>
+    <string name="average24">24h: 12.3</string>
+
+
+
+
+
 </resources>

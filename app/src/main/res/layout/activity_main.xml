@@ -75,29 +75,32 @@
         app:layout_constraintTop_toBottomOf="@id/bottleRowImage">
 
         <TextView
+            android:id="@+id/username5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Luciano"
+            android:text="@string/username5"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/time5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="16:30"
+            android:text="@string/time5"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/amount5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="120ml"
+            android:text="@string/amount5"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="20sp" />
 
@@ -118,27 +121,30 @@
         app:layout_constraintTop_toBottomOf="@id/feeding1">
 
         <TextView
+            android:id="@+id/username4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Luciano"
+            android:text="@string/username4"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/time4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="17:32"
+            android:text="@string/time4"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/amount4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="30ml"
+            android:text="@string/amount4"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -158,29 +164,32 @@
         app:layout_constraintTop_toBottomOf="@id/feeding2">
 
         <TextView
+            android:id="@+id/username3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Marceli"
+            android:text="@string/username3"
             android:textColor="#ffaa66cc"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/time3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="20:18"
+            android:text="@string/time3"
             android:textColor="@android:color/holo_purple"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/amount3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="60ml"
+            android:text="@string/amount3"
             android:textColor="@android:color/holo_purple"
             android:textSize="20sp" />
 
@@ -201,27 +210,30 @@
         app:layout_constraintTop_toBottomOf="@id/feeding3">
 
         <TextView
+            android:id="@+id/username2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Luciano"
+            android:text="@string/username2"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/time2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="22:57"
+            android:text="@string/time2"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/amount2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="60ml"
+            android:text="@string/amount2"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -241,27 +253,30 @@
         app:layout_constraintTop_toBottomOf="@id/feeding4">
 
         <TextView
+            android:id="@+id/username1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Marceli"
+            android:text="@string/username1"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/time1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="00:37"
+            android:text="@string/time1"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/amount1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="120ml"
+            android:text="@string/amount1"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -281,27 +296,30 @@
         app:layout_constraintTop_toBottomOf="@id/feeding5">
 
         <TextView
+            android:id="@+id/username0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="Marceli"
+            android:text="@string/username0"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/time0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="04:55"
+            android:text="@string/time0"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/amount0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="90ml"
+            android:text="@string/amount0"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -321,27 +339,30 @@
         app:layout_constraintTop_toBottomOf="@id/feeding6">
 
         <TextView
+            android:id="@+id/average06"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:text="6h 30ml"
+            android:text="@string/average06"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/average12"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="12h 30ml"
+            android:text="@string/average12"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/average24"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:text="24h 30ml"
+            android:text="@string/average24"
             android:textSize="20sp" />
 
     </LinearLayout>

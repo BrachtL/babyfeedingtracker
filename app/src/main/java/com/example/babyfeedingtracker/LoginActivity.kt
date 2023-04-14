@@ -24,7 +24,10 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
+// TODO: Return to this activity if station and user are not found
+// TODO: botão fica no LOADING quando o user digitado não é válido
 
 class LoginActivity : AppCompatActivity() {
 
@@ -44,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
             )
 
             findViewById<View>(R.id.blue_square).background.clearColorFilter()
-            hexColor = Integer.toHexString(ContextCompat.getColor(this, android.R.color.holo_purple))
+            hexColor = "#" + Integer.toHexString(ContextCompat.getColor(this, android.R.color.holo_purple))
             // Square 1 was clicked
         } else if (clickedSquareId == R.id.blue_square) {
 
@@ -54,11 +57,12 @@ class LoginActivity : AppCompatActivity() {
             )
 
             findViewById<View>(R.id.purple_square).background.clearColorFilter()
-            hexColor = Integer.toHexString(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
+            hexColor = "#" + Integer.toHexString(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
             // Square 2 was clicked
         }
     }
 
+    // TODO: username.length has to be between 3 and 7
     fun validateFieldString(field: String, fieldName: String): String {
 
         if(field.length < 6) {
@@ -137,7 +141,11 @@ class LoginActivity : AppCompatActivity() {
 
                     val requestBody = jsonObject.toString().toRequestBody(JSON)
 
-                    val client = OkHttpClient()
+                    val client = OkHttpClient.Builder()
+                        .connectTimeout(30, TimeUnit.SECONDS) // set connection timeout
+                        .readTimeout(30, TimeUnit.SECONDS) // set read timeout
+                        .writeTimeout(30, TimeUnit.SECONDS) // set write timeout
+                        .build()
 
                     val request = Request.Builder()
                         .url(url)
@@ -197,9 +205,12 @@ class LoginActivity : AppCompatActivity() {
                                 runOnUiThread {
                                     loginButton.isEnabled = true
                                     loginButton.text = "LOGIN"
+                                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(intent)
                                 }
 
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                //startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             } else {
                                 runOnUiThread {
                                     loginButton.isEnabled = true

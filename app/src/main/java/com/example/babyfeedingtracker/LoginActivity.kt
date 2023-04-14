@@ -27,7 +27,6 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 // TODO: Return to this activity if station and user are not found
-// TODO: botão fica no LOADING quando o user digitado não é válido
 
 class LoginActivity : AppCompatActivity() {
 
@@ -65,10 +64,20 @@ class LoginActivity : AppCompatActivity() {
     // TODO: username.length has to be between 3 and 7
     fun validateFieldString(field: String, fieldName: String): String {
 
-        if(field.length < 6) {
-            val toast = Toast.makeText(this, "Please enter at least 6 chars for your $fieldName", Toast.LENGTH_SHORT)
-            toast.show()
-            return "length"
+        if(fieldName == "baby name") {
+            if(field.length < 6) {
+                val toast = Toast.makeText(this, "Please enter at least 6 chars for your $fieldName", Toast.LENGTH_SHORT)
+                toast.show()
+                return "length"
+            }
+        } else if(fieldName == "username") {
+            if(field.length > 7 || field.length < 3) {
+                val toast = Toast.makeText(this, "username has to have between 3 and 7 chars", Toast.LENGTH_SHORT)
+                toast.show()
+                return "length"
+            }
+        } else {
+            return "not username nor baby name"
         }
 
         val prohibitedChars = " '`|#$*/-,;()\\" + "\n" + '"'
@@ -240,6 +249,9 @@ class LoginActivity : AppCompatActivity() {
                     //finish() // Finish the SetupActivity so that the user cannot go back to it
                 }
                 */
+            } else {
+                loginButton.isEnabled = true
+                loginButton.text = "LOGIN"
             }
         }
     }

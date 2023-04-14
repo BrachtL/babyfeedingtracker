@@ -29,9 +29,9 @@
 
         android:layout_marginTop="40dp"
         android:layout_weight="1"
-        app:layout_constraintEnd_toStartOf="@+id/bottleRowImage"
+        app:layout_constraintEnd_toStartOf="@id/bottleRowImage"
         app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toEndOf="@+id/coupleRowImage"
+        app:layout_constraintStart_toEndOf="@id/coupleRowImage"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/clock1" />
 
@@ -43,12 +43,12 @@
 
         android:layout_marginTop="40dp"
         android:layout_weight="1"
-        app:layout_constraintEnd_toEndOf="@+id/feeding1"
+        app:layout_constraintEnd_toEndOf="@id/feeding1"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bottle2" />
 
     <ImageView
-        android:id="@+id/bottleRowImage2"
+        android:id="@+id/mamadaImage"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_gravity="end"
@@ -376,12 +376,13 @@
         android:ems="10"
         android:hint="xxx ml"
         android:inputType="number"
+        android:digits="0123456789"
         android:textAlignment="center"
         android:textColorHint="#8E8E8E"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/bottleRowImage2"
-        app:layout_constraintEnd_toEndOf="@+id/bottleRowImage2"
-        app:layout_constraintStart_toStartOf="@+id/bottleRowImage2" />
+        app:layout_constraintBottom_toTopOf="@id/mamadaImage"
+        app:layout_constraintEnd_toEndOf="@id/mamadaImage"
+        app:layout_constraintStart_toStartOf="@id/mamadaImage" />
 
     <EditText
         android:id="@+id/editTextTime"
@@ -390,14 +391,15 @@
         android:layout_marginBottom="14dp"
         android:background="@null"
         android:ems="10"
-        android:hint="00:00"
+        android:hint="23:59"
+        android:maxLength="5"
         android:inputType="time"
         android:textAlignment="center"
         android:textColorHint="#8E8E8E"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextAmount"
-        app:layout_constraintEnd_toEndOf="@+id/editTextAmount"
-        app:layout_constraintStart_toStartOf="@+id/editTextAmount" />
+        app:layout_constraintBottom_toTopOf="@id/editTextAmount"
+        app:layout_constraintEnd_toEndOf="@id/editTextAmount"
+        app:layout_constraintStart_toStartOf="@id/editTextAmount" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

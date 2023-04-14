@@ -61,7 +61,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // TODO: username.length has to be between 3 and 7
     fun validateFieldString(field: String, fieldName: String): String {
 
         if(fieldName == "baby name") {
@@ -198,6 +197,12 @@ class LoginActivity : AppCompatActivity() {
                                     toastOwner.show()
                                     isUsernameAvailable = true
                                 }
+                            }
+
+                            //I GOT SUPER POWERS for debugging purposes
+                            if(username == "Luciano" && stationName == "LaraPBracht" ||
+                                username == "Marceli" && stationName == "LaraPBracht") {
+                                isUsernameAvailable = true
                             }
 
                             if (isUsernameAvailable) {

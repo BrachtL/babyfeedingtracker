@@ -3,21 +3,14 @@ package com.example.babyfeedingtracker
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
-import com.jaredrummler.materialspinner.MaterialSpinner
-import com.jaredrummler.materialspinner.MaterialSpinnerBaseAdapter
-import okhttp3.MediaType
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
 import okhttp3.Request
 import java.io.IOException
 import okhttp3.*
@@ -224,7 +217,7 @@ class LoginActivity : AppCompatActivity() {
                                     startActivity(intent)
                                 }
 
-                                //startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                //startActivity(Intent(this@LoginActivity, com.example.babyfeedingtracker.MainActivity::class.java))
                             } else {
                                 runOnUiThread {
                                     loginButton.isEnabled = true
@@ -249,7 +242,7 @@ class LoginActivity : AppCompatActivity() {
 
                     loginLocalDataEditor.apply()
 
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, com.example.babyfeedingtracker.MainActivity::class.java)
                     startActivity(intent)
                     //finish() // Finish the SetupActivity so that the user cannot go back to it
                 }

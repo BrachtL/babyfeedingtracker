@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0000FF</color>
     <color name="red">#FF0000</color>
+    <color name="diaper_background_pink">#FF6EC7</color>
 
 </resources>

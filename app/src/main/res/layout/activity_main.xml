@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/coupleRowImage"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_gravity="start"
 
         android:layout_marginTop="40dp"
@@ -23,8 +23,8 @@
 
     <ImageView
         android:id="@+id/clockRowImage"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_gravity="center"
 
         android:layout_marginTop="40dp"
@@ -37,8 +37,8 @@
 
     <ImageView
         android:id="@+id/bottleRowImage"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_gravity="end"
 
         android:layout_marginTop="40dp"
@@ -59,6 +59,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/bottle2" />
+
+    <ImageView
+        android:id="@+id/diaperImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="end"
+
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/diaper2" />
 
     <LinearLayout
         android:id="@+id/feeding1"
@@ -383,6 +396,20 @@
         app:layout_constraintBottom_toTopOf="@id/mamadaImage"
         app:layout_constraintEnd_toEndOf="@id/mamadaImage"
         app:layout_constraintStart_toStartOf="@id/mamadaImage" />
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="72sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:background="@null"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/diaperImage"
+        app:layout_constraintEnd_toEndOf="@id/diaperImage"
+        app:layout_constraintStart_toStartOf="@id/diaperImage"
+        android:text="@string/timerText"
+        android:textColor="@android:color/holo_blue_dark" />
 
     <EditText
         android:id="@+id/editTextTime"

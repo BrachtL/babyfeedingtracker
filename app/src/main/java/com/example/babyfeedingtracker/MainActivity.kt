@@ -1,22 +1,44 @@
 package com.example.babyfeedingtracker
+/*
 
+
+
+//todo: criar a notificação de quando alguem trocou por voce
+	ocorre quando acaba o timer e o valor durationMS sube ou quando entra no if que sobe o mesmo valor
+	exceto quando a propria pessoa clica na fralda (set)
+	checar se o nome de quem trocou é o mesmo, se não for, disparar a mensagem
+		tem que receber da API o nome de quem trocou pra poder checkar
+
+//todo: chamar a função get nos pontos certos
+
+ */
+
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.RingtoneManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
-var TAG: String = "Testing click on an imageview"
+var TAG: String = "Testing diaper and timer"
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
     */
 
-    // TODO: apagar os campos que não tiverem dados
+    // TODO: apagar os campos que não tiverem dados no layout: username, amount e time
     // TODO: aparecer que não há dados, se a response vir vazia (user novo)
 
     // TODO: adicionar cores às médias (ex.: media 06 fica vermelha se abaixo da 12 ou 24)
@@ -43,11 +65,44 @@ class MainActivity : AppCompatActivity() {
     // TODO: notificação de hora de amementar
     // TODO: notificação que alguem amamentou
 
-    // TODO: fazer o merge da mamada postada com menos de 30min da última mamada: soma os amounts e fas a média do tempo
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var changeDiaperTimer: CountDownTimer? = null
+
+        val channelId = "diaper_change_reminder"
+        val channelName = "Diaper Change Reminder"
+        val channelDescription = "Receive reminders when it's time to change baby's diaper"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val defaultNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+        val notificationChannel = NotificationChannel(channelId, channelName, importance)
+        notificationChannel.description = channelDescription
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+
+        val checkId = 1 // a unique id for the notification each time it appears
+        val changeId = 2
+
+        //if same value is used, the notification will be "replaced", "updated"
+
+        val diaperChangeBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.diaper1)
+            .setColor(ContextCompat.getColor(this, R.color.diaper_background_pink))
+            .setContentTitle("É hora de trocar as fraldas \\o/")
+            .setContentText("Seu bebê precisa de fraldas limpinhas")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setSound(defaultNotificationSoundUri)
+
+        val diaperCheckBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.diaper1)
+            .setColor(ContextCompat.getColor(this, R.color.diaper_background_pink))
+            .setContentTitle("Checando se precisa trocar as fraldas")
+            .setContentText("Aguarde")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+
 
         val loginLocalData = getSharedPreferences("login", Context.MODE_PRIVATE)
 
@@ -68,8 +123,365 @@ class MainActivity : AppCompatActivity() {
                         "$username, userColor: $userColor and station: $station"
             )
 
+            val diaperImageView: ImageView = findViewById(R.id.diaperImage)
             val mamadaImageView: ImageView = findViewById(R.id.mamadaImage)
+            var timerText: TextView = findViewById<TextView>(R.id.timerText)
             mamadaImageView.isClickable = true
+            diaperImageView.isClickable = true
+            var durationMS = 2999999999L //14400000L //4hInMS
+
+
+            var debug1 = 1
+            fun getDiaperTimerDurationAndAnalyze(username: String, station: String) {
+                //considerações:
+                /*
+                    //acho que toda fez que eu trocar o valor do duration, tenho que fazer um .cancel(), reinstanciar e um .start()
+                    //excluir o código relacionado ao "first timer" e fazer sem, provavelmente não vai precisar
+                    //o timer object vai ser manipulado tanto aqui quanto na função set
+                    //se não tem dados no db, responde 4h em ms
+                    //não preciso fazer valor default para o durationMS, pois o timer só começa quando eu instanciar, ou seja, quando tiver o primeiro duration
+                    //meu cérebro fritou, mas quando eu estiver lendo ir de novo, vou conseguir fazer...
+                    //tudo está funcionando separadamente, falta só juntar e tirar código de debug que injetei
+                 */
+
+                //diaperImageView.isClickable = false //it makes more sense let it active
+
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS) // set connection timeout
+                    .readTimeout(30, TimeUnit.SECONDS) // set read timeout
+                    .writeTimeout(30, TimeUnit.SECONDS) // set write timeout
+                    .build()
+
+                val urlBuilder = HttpUrl.Builder()
+                    .scheme("https")
+                    .host("lbracht-server-bft.glitch.me") //
+                    .addPathSegment("getDiaperTimerDurationAndLastUsername")
+                    .addQueryParameter("username", username)
+                    .addQueryParameter("station", station)
+
+
+                val url = urlBuilder.build()
+
+                val request = Request.Builder()
+                    .url(url)
+                    .get()
+                    .build()
+
+
+                val toastError = Toast.makeText(
+                    this@MainActivity, "Error getDiaperTimerDurationAndAnalyze" +
+                            "Username: $username" +
+                            "station: $station"
+                    , Toast.LENGTH_SHORT
+                )
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        Log.d(
+                            "Error getDiaperTimerDurationAndAnalyze", "onFailure" +
+                                    "Username: $username" +
+                                    "station: $station"
+                        )
+                        toastError.show()
+
+                        runOnUiThread {
+                            diaperImageView.isClickable = true
+                            // TODO: devo cancelar as duas notificações aqui?
+                        }
+                    }
+
+                    //onResponse, chamar timer.cancel(), instanciar de novo com o restante do tempo e chamar
+                    //se o tempo for menor que 10 minutos ou se já passou, enviar notificação de troca de fralda e trocar a imagem para o gif
+                    // TODO: vou mandar um request get quando clicar na mamadeira, quando terminar o timer, onCreate e onResume
+                    // TODO: atualiza o valor somente se a diferença for mais de 10m
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBodyJSON = JSONObject(response.body!!.string())
+
+                        var timerDurationDb = responseBodyJSON.getString("timerDuration").toLong()
+                        val messageDb = responseBodyJSON.getString("message")
+                        val lastUsername = responseBodyJSON.getString("lastUsername")
+                        Log.d(TAG, "onResponse: lastUsername = $lastUsername\nmessageDb = $messageDb\ntimerDurationDb = $timerDurationDb")
+
+
+                        Log.d("getDiaperTimerDurationAndAnalyze", "onResponse: $responseBodyJSON")
+
+                        runOnUiThread {
+
+
+                            //acho que esse if nao faz mais sentido, visto que vou ter que instanciar todas as vezes
+                            //acho que toda fez que eu trocar o valor do duration, tenho que fazer um .cancel(), reinstanciar e um .start()
+                            //if (changeDiaperTimer == null) {
+                                // create new timer and assign it to changeDiaperTimer
+                            /*
+                                changeDiaperTimer = object : CountDownTimer(durationMS, 1000) { //14400000 //4h
+                                    override fun onTick(millisUntilFinished: Long) {
+                                        durationMS = millisUntilFinished
+                                        var hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
+                                        var minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished - TimeUnit.HOURS.toMillis(hours))
+                                        var seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+                                        timerText.text = "$hours:$minutes:$seconds"
+                                        //timerText.text = "$durationMS:$1" // TODO: remove this line
+                                        Log.d(TAG, "onTick: durationMS: $durationMS")
+
+                                    }
+
+                                    override fun onFinish() {
+                                        notificationManager.notify(checkId, diaperCheckBuilder.build())
+                                        getDiaperTimerDurationAndAnalyze(username!!, station!!)
+                                        Log.d(TAG, "onFinish: finish happens")
+                                    }
+                                }
+                            //}
+                            */
+
+
+
+                            /*
+                            //start the first timer
+                            if (durationMS == 2999999999L) {
+                                durationMS = 7000L //4hInMS todo: change it to 14400000L
+
+                                //changeDiaperTimer.cancel()
+                                //changeDiaperTimer.start()
+                                Log.d(TAG, "Estive no if first timer")
+                            }
+
+                            */
+
+                            //changeDiaperTimer.cancel()
+
+
+
+                            if(timerDurationDb <= 0) { //old: if(timerDurationDb <= 60000) {
+                                val hexColor = "#" + Integer.toHexString(ContextCompat.getColor(this@MainActivity, android.R.color.holo_red_dark))
+                                val colorInt = Color.parseColor(hexColor)
+
+                                timerText.setTextColor(colorInt)
+
+                                Glide.with(this@MainActivity)
+                                    .load(R.drawable.poopgif1)
+                                    .into(diaperImageView)
+
+                                notificationManager.cancel(checkId) //todo: check notification vai ser sempre criada no onFinish e encerrada nessa função
+                                notificationManager.notify(changeId, diaperChangeBuilder.build())
+
+                                if (changeDiaperTimer != null) {
+                                    changeDiaperTimer!!.cancel()
+                                }
+                                durationMS = -1L
+                                /*//todo: put a chronometer here
+                                durationMS = timerDurationDb
+                                changeDiaperTimer = object : CountDownTimer(durationMS, 1000) { //14400000 //4h
+                                    override fun onTick(millisUntilFinished: Long) {
+                                        durationMS = millisUntilFinished
+                                        var hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
+                                        var minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished - TimeUnit.HOURS.toMillis(hours))
+                                        var seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+                                        timerText.text = "$hours:$minutes:$seconds"
+                                        //timerText.text = "$durationMS:$1" // TODO: remove this line
+                                        Log.d(TAG, "onTick: durationMS: $durationMS")
+
+                                    }
+
+                                    override fun onFinish() {
+                                        notificationManager.notify(checkId, diaperCheckBuilder.build())
+                                        getDiaperTimerDurationAndAnalyze(username!!, station!!)
+                                        Log.d(TAG, "onFinish: finish happens")
+                                    }
+                                }
+                                changeDiaperTimer!!.start()
+                                */
+                            } else {
+
+                                if ((abs(timerDurationDb - durationMS) > 60000) || durationMS == -1L) {
+                                    if (changeDiaperTimer != null) {
+                                        changeDiaperTimer!!.cancel()
+                                    }
+                                    Log.d(TAG, "onResponse: I AM HERE IN THE TIMER!!!")
+                                    durationMS = timerDurationDb
+                                    changeDiaperTimer = object : CountDownTimer(durationMS, 1000) { //14400000 //4h
+                                        override fun onTick(millisUntilFinished: Long) {
+                                            durationMS = millisUntilFinished
+                                            var hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
+                                            var minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished - TimeUnit.HOURS.toMillis(hours))
+                                            var seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+
+                                            timerText.text = String.format("%01d:%02d:%02d", hours, minutes, seconds)
+                                            //timerText.text = "$durationMS:$1" // TODO: remove this line
+                                            Log.d(TAG, "onTick: durationMS: $durationMS")
+
+                                        }
+
+                                        override fun onFinish() {
+                                            notificationManager.notify(checkId, diaperCheckBuilder.build())
+                                            getDiaperTimerDurationAndAnalyze(username!!, station!!)
+                                            Log.d(TAG, "onFinish: finish happens")
+                                        }
+                                    }
+                                    changeDiaperTimer!!.start()
+                                    Log.d(TAG, "onResponse: atualizei a duration com o db: $durationMS")
+                                }
+
+                                val hexColor = "#" + Integer.toHexString(
+                                    ContextCompat.getColor(
+                                        this@MainActivity,
+                                        android.R.color.holo_blue_dark
+                                    )
+                                )
+                                val colorInt = Color.parseColor(hexColor)
+
+                                timerText.setTextColor(colorInt)
+
+                                diaperImageView.setImageResource(R.drawable.diaper2)
+
+                                notificationManager.cancel(changeId)
+                                notificationManager.cancel(checkId) //todo: check notification vai ser sempre criada no onFinish e encerrada nessa função
+                            }
+                            diaperImageView.isClickable = true
+
+                            /*
+                            if(debug1%2 == 1) {
+                                changeDiaperTimer = object : CountDownTimer(durationMS, 1000) {
+                                    override fun onTick(millisUntilFinished: Long) {
+                                        durationMS = millisUntilFinished
+                                        var hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
+                                        var minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished - TimeUnit.HOURS.toMillis(hours))
+                                        var seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+                                        timerText.text = "$hours:$minutes:$seconds"
+                                        //timerText.text = "$durationMS:$1" // TODO: remove this line
+                                        Log.d(TAG, "onTick: durationMS: $durationMS")
+                                    }
+
+                                    override fun onFinish() {
+                                        //notificationManager.notify(notificationId, diaperCheckBuilder.build())
+                                        //esse gif vai sair daqui e a notificação tbm
+                                        getDiaperTimerDurationAndAnalyze(username!!, station!!)
+                                        Log.d(TAG, "onFinish: finish happens")
+                                    }
+                                }
+                                    
+
+                                changeDiaperTimer!!.start()
+                                Log.d(TAG, "onResponse: LIGUEI O TIMER!!!")
+                            } else {
+                                changeDiaperTimer!!.cancel()
+                                Log.d(TAG, "onResponse: DESLIGUEI O TIMER!!!")
+                            }
+
+                            debug1++
+
+                            */
+
+
+                        }
+                    }
+                })
+            }
+
+            fun setDiaperChangeTime(username: String, station: String) {
+
+                //diaperImageView.isClickable = false //it makes more sense let it active
+
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(30, TimeUnit.SECONDS) // set connection timeout
+                    .readTimeout(30, TimeUnit.SECONDS) // set read timeout
+                    .writeTimeout(30, TimeUnit.SECONDS) // set write timeout
+                    .build()
+
+                val urlBuilder = HttpUrl.Builder()
+                    .scheme("https")
+                    .host("lbracht-server-bft.glitch.me") //
+                    .addPathSegment("setDiaperChangeTime")
+                    .addQueryParameter("username", username)
+                    .addQueryParameter("station", station)
+
+
+                val url = urlBuilder.build()
+
+                val request = Request.Builder()
+                    .url(url)
+                    .post(RequestBody.create(null, ""))
+                    .build()
+
+
+                val toastError = Toast.makeText(
+                    this@MainActivity, "Error setDiaperChangeTime" +
+                            "Username: $username" +
+                            "station: $station"
+                    , Toast.LENGTH_SHORT
+                )
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        Log.d(
+                            "Error setDiaperChangeTime", "onFailure" +
+                                    "Username: $username" +
+                                    "station: $station"
+                        )
+                        toastError.show()
+
+                        runOnUiThread {
+                            diaperImageView.isClickable = true
+                        }
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBodyJSON = JSONObject(response.body!!.string())
+
+                        val timerDurationDb = responseBodyJSON.getString("timerDuration").toLong()
+                        val messageDb = responseBodyJSON.getString("message")
+
+
+                        Log.d("setDiaperChangeTime", "onResponse: $responseBodyJSON")
+
+                        runOnUiThread {
+
+                            if (changeDiaperTimer != null) {
+                                changeDiaperTimer!!.cancel()
+                            }
+                            durationMS = timerDurationDb
+                            changeDiaperTimer = object : CountDownTimer(durationMS, 1000) { //14400000 //4h
+                                override fun onTick(millisUntilFinished: Long) {
+                                    durationMS = millisUntilFinished
+                                    var hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
+                                    var minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished - TimeUnit.HOURS.toMillis(hours))
+                                    var seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+
+                                    timerText.text = String.format("%01d:%02d:%02d", hours, minutes, seconds)
+                                    //timerText.text = "$durationMS:$1" // TODO: remove this line
+                                    Log.d(TAG, "onTick: durationMS: $durationMS")
+
+                                }
+
+                                override fun onFinish() {
+                                    notificationManager.notify(checkId, diaperCheckBuilder.build())
+                                    getDiaperTimerDurationAndAnalyze(username!!, station!!)
+                                    Log.d(TAG, "onFinish: finish happens")
+                                }
+                            }
+                            changeDiaperTimer!!.start()
+                            Log.d(TAG, "onResponse: atualizei a duration com o db: $durationMS")
+
+                            val hexColor = "#" + Integer.toHexString(
+                                ContextCompat.getColor(
+                                    this@MainActivity,
+                                    android.R.color.holo_blue_dark
+                                )
+                            )
+                            val colorInt = Color.parseColor(hexColor)
+
+                            timerText.setTextColor(colorInt)
+
+                            diaperImageView.setImageResource(R.drawable.diaper2)
+
+                            notificationManager.cancel(changeId)
+                            notificationManager.cancel(checkId) //todo: check notification vai ser sempre criada no onFinish e encerrada nessa função
+                            diaperImageView.isClickable = true
+                        }
+                    }
+                })
+            }
 
             val timeEditText: EditText = findViewById<EditText>(R.id.editTextTime)
 
@@ -82,7 +494,7 @@ class MainActivity : AppCompatActivity() {
                     // Do nothing
                 }
 
-                // TODO: add constraints here that doesn't allow invalid inputs.
+                // TODO: add constraints here that don't allow invalid inputs.
                 //  It is a if puzzle! :D
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (s?.length == 2 && before == 0) {
@@ -128,7 +540,7 @@ class MainActivity : AppCompatActivity() {
                     .build()
 
                 val toastError = Toast.makeText(
-                    this, "Error getMamadasScreenData" +
+                    this@MainActivity, "Error getMamadasScreenData" +
                             "Username: $username" +
                             "stationName: $stationName"
                             //"color: $color"
@@ -212,10 +624,11 @@ class MainActivity : AppCompatActivity() {
             fun setMamada(username: String, stationName: String, time: String, amount: String) {
 
                 if(amountEditText.text.toString() == "" || amountEditText.text.toString().toInt() == 0) {
-                    val toastBlank = Toast.makeText(this,
+                    val toastBlank = Toast.makeText(this@MainActivity,
                         "Please enter the amount you fed",
                         Toast.LENGTH_SHORT)
                     toastBlank.show()
+                    getMamadasScreenData(username!!, station!!, userColor!!)
                 } else {
 
                     //val mamadaImageView: ImageView = findViewById(R.id.mamadaImage)
@@ -246,7 +659,7 @@ class MainActivity : AppCompatActivity() {
                         .build()
 
                     val toastError = Toast.makeText(
-                        this, "Error setMamada" +
+                        this@MainActivity, "Error setMamada" +
                                 "Username: $username" +
                                 "stationName: $stationName" +
                                 "time: $time" +
@@ -299,13 +712,27 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+
+
             mamadaImageView.setOnClickListener {
                 Log.d(TAG, "onCreate: mamadaImageView was clicked")
                 setMamada(username!!, station!!, timeEditText.text.toString(), amountEditText.text.toString())
+                getDiaperTimerDurationAndAnalyze(username!!, station!!)
             }
 
-            getMamadasScreenData(username!!, station!!, userColor!!)
+            diaperImageView.setOnClickListener {
 
+                //todo: popup: você trocou o bebê? //fazer isso depois, nao na primeira implementação
+                    //se sim: chamar setDiaperTime(). Enviar station e username, timestamp pego do db
+                    //como acabou de clicar em trocar, só dar .cancel() e .start() (nao precisa consultar o db daí, né)
+                    //trocar imagem para a fralda
+
+                setDiaperChangeTime(username!!, station!!)
+            }
+
+            getDiaperTimerDurationAndAnalyze(username!!, station!!)
+            getMamadasScreenData(username!!, station!!, userColor!!)
         }
     }
 }
+

@@ -1,5 +1,45 @@
 package com.example.babyfeedingtracker
-/*
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.media.RingtoneManager
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.HttpUrl
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
+import java.lang.Math.abs
+import java.util.concurrent.TimeUnit
+
+
+var TAG: String = "Testing diaper and timer"
+
+
+class MainActivity : AppCompatActivity() {
+
+    /*
 
 
 
@@ -13,35 +53,6 @@ package com.example.babyfeedingtracker
 
  */
 
-
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.media.RingtoneManager
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.widget.*
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import java.io.IOException
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
-
-var TAG: String = "Testing diaper and timer"
-
-
-class MainActivity : AppCompatActivity() {
 
     /*
     override fun onBackPressed() {
@@ -64,6 +75,10 @@ class MainActivity : AppCompatActivity() {
 
     // TODO: notificação de hora de amementar
     // TODO: notificação que alguem amamentou
+
+    // TODO: colocar todas as strings no arquivo de strings
+
+    // TODO: alterar IDs para atender ao padrão de código: snake_case. Ex.: image_diaper_is_time
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

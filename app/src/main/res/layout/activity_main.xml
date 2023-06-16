@@ -6,13 +6,301 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+
+    <ImageView
+        android:id="@+id/coupleRowImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        app:layout_constraintStart_toStartOf="@+id/feeding1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/couple1" />
+
+    <ImageView
+        android:id="@+id/clockRowImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toStartOf="@id/bottleRowImage"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toEndOf="@id/coupleRowImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/clock1" />
+
+    <ImageView
+        android:id="@+id/bottleRowImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="@id/feeding1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bottle2" />
+
+    <ImageView
+        android:id="@+id/mamadaImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/bottle2" />
+
+    <ImageView
+        android:id="@+id/diaperImage"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="end"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/diaper2" />
+
+    <LinearLayout
+        android:id="@+id/feeding1"
+        style="@style/LinearGroups"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottleRowImage">
+
+        <TextView
+            android:id="@+id/username5"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/username5"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/time5"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/time5"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/amount5"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/amount5"
+            android:textColor="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feeding2"
+        style="@style/LinearGroups"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feeding1">
+
+        <TextView
+            android:id="@+id/username4"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/username4" />
+
+        <TextView
+            android:id="@+id/time4"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/time4" />
+
+        <TextView
+            android:id="@+id/amount4"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/amount4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feeding3"
+        style="@style/LinearGroups"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feeding2">
+
+        <TextView
+            android:id="@+id/username3"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/username3"
+            android:textColor="#ffaa66cc" />
+
+        <TextView
+            android:id="@+id/time3"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/time3"
+            android:textColor="@android:color/holo_purple" />
+
+        <TextView
+            android:id="@+id/amount3"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/amount3"
+            android:textColor="@android:color/holo_purple" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feeding4"
+        style="@style/LinearGroups"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feeding3">
+
+        <TextView
+            android:id="@+id/username2"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/username2" />
+
+        <TextView
+            android:id="@+id/time2"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/time2" />
+
+        <TextView
+            android:id="@+id/amount2"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/amount2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feeding5"
+        style="@style/LinearGroups"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feeding4">
+
+        <TextView
+            android:id="@+id/username1"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/username1" />
+
+        <TextView
+            android:id="@+id/time1"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/time1" />
+
+        <TextView
+            android:id="@+id/amount1"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/amount1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/feeding6"
+        style="@style/LinearGroups"
+        android:layout_marginTop="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feeding5">
+
+        <TextView
+            android:id="@+id/username0"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/username0" />
+
+        <TextView
+            android:id="@+id/time0"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/time0" />
+
+        <TextView
+            android:id="@+id/amount0"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/amount0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/averagesLine"
+        style="@style/LinearGroups"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feeding6">
+
+        <TextView
+            android:id="@+id/average06"
+            style="@style/MatrixTextElements"
+            android:gravity="start"
+            android:text="@string/average06" />
+
+        <TextView
+            android:id="@+id/average12"
+            style="@style/MatrixTextElements"
+            android:gravity="center"
+            android:text="@string/average12" />
+
+        <TextView
+            android:id="@+id/average24"
+            style="@style/MatrixTextElements"
+            android:gravity="end"
+            android:text="@string/average24" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editTextAmount"
+        android:layout_width="72sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:background="@null"
+        android:digits="0123456789"
+        android:ems="10"
+        android:hint="xxx ml"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textColorHint="#8E8E8E"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/mamadaImage"
+        app:layout_constraintEnd_toEndOf="@id/mamadaImage"
+        app:layout_constraintStart_toStartOf="@id/mamadaImage" />
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="72sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:background="@null"
+        android:text="@string/timerText"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/diaperImage"
+        app:layout_constraintEnd_toEndOf="@id/diaperImage"
+        app:layout_constraintStart_toStartOf="@id/diaperImage" />
+
+    <EditText
+        android:id="@+id/editTextTime"
+        android:layout_width="72sp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:background="@null"
+        android:ems="10"
+        android:hint="23:59"
+        android:inputType="time"
+        android:maxLength="5"
+        android:textAlignment="center"
+        android:textColorHint="#8E8E8E"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/editTextAmount"
+        app:layout_constraintEnd_toEndOf="@id/editTextAmount"
+        app:layout_constraintStart_toStartOf="@id/editTextAmount" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

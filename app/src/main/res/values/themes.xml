@@ -6,4 +6,26 @@
     </style>
 
     <style name="Theme.BabyFeedingTrackerMVVM" parent="Base.Theme.BabyFeedingTrackerMVVM" />
+
+
+    <style name="MatrixTextElements">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="LinearGroups">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">48dp</item>
+        <item name="android:layout_marginRight">48dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+
+
+
+
 </resources>

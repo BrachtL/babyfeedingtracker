@@ -10,6 +10,7 @@ import com.example.babyfeedingtrackermvvm.model.UserModel
 import com.example.babyfeedingtrackermvvm.repository.RetrofitClient
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 import com.example.babyfeedingtrackermvvm.repository.UserRepository
+import okhttp3.ResponseBody
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -35,8 +36,8 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             return
         }
 
-        userRepository.register(username, station, color, object : APIListener<UserModel> {
-            override fun onSuccess(result: UserModel) {
+        userRepository.register(username, station, color, object : APIListener<String> {
+            override fun onSuccess(result: String) {
                 //userPreferences.store("token", result.token)
                 userPreferences.store("username", username)
                 userPreferences.store("station", station)
@@ -45,7 +46,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
                 //RetrofitClient.addToken(result.token)
 
 
-                _registerMessage.value = "username: " + username +  "station: " + station + "color: " + color
+                _registerMessage.value = result
                 //_registerMessage.value = "success"
             }
 

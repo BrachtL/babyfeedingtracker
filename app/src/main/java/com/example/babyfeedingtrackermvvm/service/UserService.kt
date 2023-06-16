@@ -1,6 +1,8 @@
 package com.example.babyfeedingtrackermvvm.service
 
+import com.example.babyfeedingtrackermvvm.model.APIGeneralResponse
 import com.example.babyfeedingtrackermvvm.model.UserModel
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -11,5 +13,5 @@ interface UserService {
     @POST("station/checkAvailabilityAndPost")
     fun register(
         @Body user: UserModel
-    ) : Call<UserModel>
+    ) : Call<APIGeneralResponse>
 }

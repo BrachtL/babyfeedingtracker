@@ -1,7 +1,8 @@
-package com.example.babyfeedingtrackermvvm
+package com.example.babyfeedingtrackermvvm.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.babyfeedingtrackermvvm.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,6 +1,5 @@
-package com.example.babyfeedingtrackermvvm
+package com.example.babyfeedingtrackermvvm.view
 
-import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.babyfeedingtrackermvvm.R
+import com.example.babyfeedingtrackermvvm.viewmodel.RegisterViewModel
 import com.example.babyfeedingtrackermvvm.databinding.ActivityRegisterBinding
 
 class RegisterActivity: AppCompatActivity() {
@@ -31,7 +32,7 @@ class RegisterActivity: AppCompatActivity() {
 
         //Events
         binding.buttonLogin.setOnClickListener {
-            viewModel.doLogin(binding.editUsername.text.toString(), binding.editStation.text.toString(), hexColor)
+            viewModel.doRegister(binding.editUsername.text.toString(), binding.editStation.text.toString(), hexColor)
         }
 
         //Observers
@@ -43,12 +44,12 @@ class RegisterActivity: AppCompatActivity() {
     //functions
 
     private fun observe() {
-        viewModel.loginMessage.observe(this) {
+        viewModel.registerMessage.observe(this) {
 
             if(it != "success") {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             } else {
-                // TODO: prosseguir com o login
+                // TODO: prosseguir com o register
                 //startActivity(Intent(applicationContext, MainActivity::class.java))
                 //finish()
             }

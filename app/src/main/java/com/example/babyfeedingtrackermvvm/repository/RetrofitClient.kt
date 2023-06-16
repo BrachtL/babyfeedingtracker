@@ -3,6 +3,7 @@ package com.example.babyfeedingtrackermvvm.repository
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class RetrofitClient private constructor() {
 
@@ -12,6 +13,10 @@ class RetrofitClient private constructor() {
 
         private fun getRetrofitInstance(): Retrofit {
             val httpClient = OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)// API has auto-sleep, first access can take around 5 to 15 seconds
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+
 
             // TODO: implementar jwt na API
             /*

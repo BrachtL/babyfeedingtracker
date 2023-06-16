@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.listener.APIListener
 import com.example.babyfeedingtrackermvvm.model.UserModel
 import com.example.babyfeedingtrackermvvm.repository.RetrofitClient
@@ -12,7 +13,7 @@ import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 import com.example.babyfeedingtrackermvvm.repository.UserRepository
 import okhttp3.ResponseBody
 
-class RegisterViewModel(application: Application) : AndroidViewModel(application) {
+class RegisterViewModel(private val application: Application) : AndroidViewModel(application) {
 
     //instantiate repositories
     val userPreferences = UserPreferences(application.applicationContext)
@@ -24,15 +25,15 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
     fun doRegister(username: String, station: String, color: String) {
         if(!validateRegisterField(username, 3, 7, " '`|#$*/-,;()\\" + "\n" + '"')) {
-            _registerMessage.value = "Usuário deve conter entre 3 e 7 caracteres não especiais"
+            _registerMessage.value = application.applicationContext.getString(R.string.user_name_restrictions)
             return
         }
         if(!validateRegisterField(station, 6, 30, " '`|#$*/-,;()\\" + "\n" + '"')) {
-            _registerMessage.value = "Station deve conter entre 6 e 30 caracteres não especiais"
+            _registerMessage.value = application.applicationContext.getString(R.string.station_name_restrictions)
             return
         }
         if(color == "") {
-            _registerMessage.value = "Por favor selecione uma cor"
+            _registerMessage.value = application.applicationContext.getString(R.string.choose_color)
             return
         }
 

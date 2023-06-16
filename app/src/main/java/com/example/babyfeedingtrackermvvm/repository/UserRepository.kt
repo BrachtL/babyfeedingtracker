@@ -1,6 +1,7 @@
 package com.example.babyfeedingtrackermvvm.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.listener.APIListener
 import com.example.babyfeedingtrackermvvm.model.APIGeneralResponse
@@ -12,14 +13,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserRepository(context: Context) /* : BaseRepository(context) */ {
-    // TODO: add a BaseRepository class for code that could be shared between Repositories
+class UserRepository(context: Context) : BaseRepository(context) {
 
     private val remote = RetrofitClient.getService(UserService::class.java)
 
     fun register(username: String, station: String, color: String, listener: APIListener<String>) {
-        if(/*TODO: isConnectionAvailable method in BaseRepository */ !true) {
-            listener.onFailure("Por favor, verifique se há conexão com a internet")
+        if(!isConnectionAvailable()) {
+            listener.onFailure(context.getString(R.string.check_internet_connection))
+            // TODO: Remove HARDCODED
             return
         }
         val userModel = UserModel(
@@ -29,12 +30,11 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
 
     }
 
-    // TODO: mandar essas 2 funções para a BaseRepository, já que as outras provavelmente usarão este código
     fun executeCall(call: Call<APIGeneralResponse>, listener: APIListener<String>) {
         call.enqueue(object : Callback<APIGeneralResponse> {
             override fun onResponse(call: Call<APIGeneralResponse>, response: Response<APIGeneralResponse>) {
                 if (response.code() == 200) {
-                    // TODO: futuramente trocar na API o código para outro número no caso de bad user
+                    // TODO: change on API the status code for username already in use and pending
                     response.body()?.let {
                         if (it.message == "userIsNowOwner" || it.message == "userIsNowPending") {
                             listener.onSuccess(it.message)
@@ -42,15 +42,16 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
                             listener.onFailure(it.message)
                         }
                     } ?: run {
-                        listener.onFailure("Empty response body")
+                        listener.onFailure(context.getString(R.string.empty_response_body))
                     }
                 } else {
-                    listener.onFailure("Failed with status code ${response.code()}")
+                    listener.onFailure(context.getString(R.string.failed_status_code, response.code()))
                 }
             }
 
             override fun onFailure(call: Call<APIGeneralResponse>, t: Throwable) {
-                listener.onFailure("Ocorreu um erro, tente novamente mais tarde")
+                listener.onFailure(context.getString(R.string.error_try_again))
+                Log.d("TOO MUCH TIME?", "onFailure: $t")
             }
         })
     }
@@ -60,7 +61,5 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
         return Gson().fromJson(str, String::class.java)
     }
     */
-
-
 
 }

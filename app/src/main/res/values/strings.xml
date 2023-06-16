@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Baby Feeding Tracker MVVM</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_station">Baby Name</string>
+    <string name="button_login">Login</string>
+    <string name="user_name_restrictions">Usuário deve conter entre 3 e 7 caracteres não especiais</string>
+    <string name="station_name_restrictions">Station deve conter entre 6 e 30 caracteres não especiais</string>
+    <string name="choose_color">Por favor selecione uma cor</string>
+    <string name="check_internet_connection">Por favor, verifique se há conexão com a internet</string>
+    <string name="empty_response_body">Empty response body</string>
+    <string name="failed_status_code">Failed with status code %1$d</string>
+    <string name="error_try_again">Ocorreu um erro, tente novamente mais tarde</string>
+
 </resources>

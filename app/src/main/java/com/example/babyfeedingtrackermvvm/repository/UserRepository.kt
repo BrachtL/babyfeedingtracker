@@ -23,10 +23,8 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
             listener.onFailure("Por favor, verifique se há conexão com a internet")
             return
         }
-        val userModel = UserModel()
-        userModel.username = username
-        userModel.station = station
-        userModel.color = color
+        val userModel = UserModel(
+        username, station, color)
 
         executeCall(remote.register(userModel), listener)
 

@@ -38,27 +38,25 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
         userRepository.register(username, station, color, object : APIListener<String> {
             override fun onSuccess(result: String) {
-                //userPreferences.store("token", result.token)
-                userPreferences.store("username", username)
-                userPreferences.store("station", station)
-                userPreferences.store("userColor", color)
 
-                //RetrofitClient.addToken(result.token)
+                //when create PendingActivity, remove this "userIsNowPending" case from here
+                if(result == "userIsNowOwner" || result == "userIsNowPending") {
+                    //userPreferences.store("token", result.token)
+                    userPreferences.store("username", username)
+                    userPreferences.store("station", station)
+                    userPreferences.store("userColor", color)
 
+                    //RetrofitClient.addToken(result.token)
+                }
 
                 _registerMessage.value = result
-                //_registerMessage.value = "success"
             }
 
             override fun onFailure(message: String) {
-                TODO("Not yet implemented")
+                _registerMessage.value = message
             }
 
         })
-
-    }
-
-    fun verifyIfLogged(/* some variables */) {
 
     }
 

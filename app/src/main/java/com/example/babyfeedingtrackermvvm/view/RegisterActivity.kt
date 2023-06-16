@@ -1,5 +1,6 @@
 package com.example.babyfeedingtrackermvvm.view
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
@@ -37,8 +38,6 @@ class RegisterActivity: AppCompatActivity() {
 
         //Observers
         observe()
-
-
     }
 
     //functions
@@ -46,12 +45,18 @@ class RegisterActivity: AppCompatActivity() {
     private fun observe() {
         viewModel.registerMessage.observe(this) {
 
-            if(it != "success") {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            //cases:
+                //"userAlreadyInTheStation" -> dont change activity, try again (cai no else)
+                //"userIsNowPending" -> change to MainActivity (in the future -> change to a PendingActivity and user has to wait the approval, or cancel the request)
+                    //3 things take user out this PendingActivity: cancel button, be approved by the owner or be rejected by the owner
+                //"userIsNowOwner" -> change activity
+
+            if(it == "userIsNowOwner" || it == "userIsNowPending") {
+                //Toast.makeText(this, "CHANGE ACTIVITY: " + it, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext, MainActivity::class.java))
+                finish()
             } else {
-                // TODO: prosseguir com o register
-                //startActivity(Intent(applicationContext, MainActivity::class.java))
-                //finish()
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -87,5 +92,3 @@ class RegisterActivity: AppCompatActivity() {
 // TODO: antes de continuar -> preciso implementar o Login na API (mesmas infos do registro, sem password por enquanto), atualmente o user só registra
     //criar RegisterActivity (e as coisas relacionadas)
 // TODO: depois de terminar de refatorar o código aqui, vou implementar JWT
-
-//commit info: updated gradle with ViewModel and Retrofit necessary dependencies

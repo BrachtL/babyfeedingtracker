@@ -18,7 +18,6 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
     private val remote = RetrofitClient.getService(UserService::class.java)
 
     fun register(username: String, station: String, color: String, listener: APIListener<String>) {
-        //por quê existe esse listener?
         if(/*TODO: isConnectionAvailable method in BaseRepository */ !true) {
             listener.onFailure("Por favor, verifique se há conexão com a internet")
             return
@@ -28,7 +27,6 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
 
         executeCall(remote.register(userModel), listener)
 
-
     }
 
     // TODO: mandar essas 2 funções para a BaseRepository, já que as outras provavelmente usarão este código
@@ -36,10 +34,13 @@ class UserRepository(context: Context) /* : BaseRepository(context) */ {
         call.enqueue(object : Callback<APIGeneralResponse> {
             override fun onResponse(call: Call<APIGeneralResponse>, response: Response<APIGeneralResponse>) {
                 if (response.code() == 200) {
-                    //response.body()?.let { listener.onSuccess(it) }
-                    //listener.onSuccess(failResponse(response.body().toString()))
+                    // TODO: futuramente trocar na API o código para outro número no caso de bad user
                     response.body()?.let {
-                        listener.onSuccess(it.message)
+                        if (it.message == "userIsNowOwner" || it.message == "userIsNowPending") {
+                            listener.onSuccess(it.message)
+                        } else {
+                            listener.onFailure(it.message)
+                        }
                     } ?: run {
                         listener.onFailure("Empty response body")
                     }

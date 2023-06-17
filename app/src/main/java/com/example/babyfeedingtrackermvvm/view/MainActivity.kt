@@ -1,8 +1,12 @@
 package com.example.babyfeedingtrackermvvm.view
 
+import android.app.AlarmManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.example.babyfeedingtrackermvvm.Alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
 import org.json.JSONObject
@@ -63,6 +67,11 @@ class MainActivity : AppCompatActivity() {
         //Observers
         observe()
 
+        val alarmScheduler = AlarmScheduler(
+            getSystemService(ALARM_SERVICE) as AlarmManager,
+            applicationContext
+        )
+
     }
 
     //functions
@@ -91,5 +100,9 @@ class MainActivity : AppCompatActivity() {
                 // TODO: change to RegisterActivity
             }
         }
+    }
+
+    fun toastMain() {
+        Toast.makeText(this, "AlarmReceiver foi triggado o/", Toast.LENGTH_SHORT).show()
     }
 }

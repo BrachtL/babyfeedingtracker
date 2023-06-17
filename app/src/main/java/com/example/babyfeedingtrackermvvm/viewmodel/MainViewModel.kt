@@ -1,17 +1,26 @@
 package com.example.babyfeedingtrackermvvm.viewmodel
 
+import android.app.AlarmManager
 import android.app.Application
+import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.babyfeedingtrackermvvm.Alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.listener.APIListener
 import com.example.babyfeedingtrackermvvm.repository.DiaperRepository
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
+import com.example.babyfeedingtrackermvvm.view.MainActivity
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
+
+    private val alarmScheduler = AlarmScheduler.getAlarmInstance(application.applicationContext.getSystemService(ALARM_SERVICE) as AlarmManager,
+        application.applicationContext)
 
     //instantiate repositories
     private val userPreferences = UserPreferences(application.applicationContext)
@@ -37,15 +46,17 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         diaperRepository.getDiaperData(username, station, object : APIListener<Long> {
             override fun onSuccess(result: Long) {
                 if(result > 0) {
-                    _timerText.value = result
-                    startTimer(result)
+                    _timerText.value = 10000 // TODO: change this value, created for debugging purposes, to result
+                    startTimer(10000) // TODO: change this value, created for debugging purposes, to result
+                    alarmScheduler.scheduleAlarm(10000)
+
 
                 } else {
                     // TODO: fazer lógica da notificação
                 }
 
-                // TODO: fazer lógica do valor menor que zero
-                // TODO: fazer lógica do "timer" para ir atualizando 1x/segundo no front
+                // TODO: fazer lógica do AlarmManager
+                // TODO: fazer lógica do "timer" virar um contador progressivo em vermelho
             }
 
             override fun onFailure(message: String) {

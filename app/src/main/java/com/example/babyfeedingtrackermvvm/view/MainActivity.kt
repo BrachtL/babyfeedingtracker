@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 
 // TODO: NEXT STEP: load diaper timer duration, implementando a loadData() e timerText na viewModel
@@ -69,7 +70,12 @@ class MainActivity : AppCompatActivity() {
     private fun observe() {
         viewModel.timerText.observe(this) {
             //setar um alarm manager: quando chegar em zero, faz um novo request para a API
-            binding.timerText.text = it.toString()
+
+            val hours = TimeUnit.MILLISECONDS.toHours(it)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(it - TimeUnit.HOURS.toMillis(hours))
+            val seconds = TimeUnit.MILLISECONDS.toSeconds(it - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+
+            binding.timerText.text = String.format("%01d:%02d:%02d", hours, minutes, seconds)
         }
 
         /*

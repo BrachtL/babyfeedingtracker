@@ -30,7 +30,6 @@ class DiaperRepository (context: Context) : BaseRepository(context) {
                 if (response.code() == 200) {
                     response.body()?.let {
                         listener.onSuccess(it.timerDuration)
-                        Log.d("Teste DIAPER TIMER DURATION", "onResponse: " + it)
                     } ?: run {
                         listener.onFailure(context.getString(R.string.empty_response_body))
                     }

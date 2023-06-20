@@ -33,11 +33,11 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val _failureMessage = MutableLiveData<String>()
     val failureMessage: LiveData<String> = _failureMessage
 
-    private val _timerTextColor = MutableLiveData<Int>()
-    val timerTextColor: LiveData<Int> = _timerTextColor
-
     private val _isLoginValid = MutableLiveData<Boolean>()
     val isLoginValid : LiveData<Boolean> = _isLoginValid
+
+    private val _isDirty = MutableLiveData<Boolean>()
+    val isDirty : LiveData<Boolean> = _isDirty
 
     private var username: String = ""
     private var station: String = ""
@@ -48,23 +48,19 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     fun getDiaperData() {
         Toast.makeText(application.applicationContext, "getDiaperData() was called", Toast.LENGTH_SHORT).show()
-        // trocar o valor de _timerText.value em algum momento
 
         diaperRepository.getDiaperData(username, station, object : APIListener<Long> {
             override fun onSuccess(result: Long) {
                 if(result > 0) {
-                    _timerTextColor.value = android.R.color.holo_blue_dark
                     _timerText.value = result
                     startTimer(result, -1000)
                     alarmScheduler.scheduleAlarm(result)
-                    // TODO: atualizar a imagem com a fralda
-
+                    _isDirty.value = false
 
                 } else {
-                    _timerTextColor.value = R.color.red
                     startTimer(-result, 1000)
                     _timerText.value = result
-                    // TODO: atualizar a imagem com o cocô
+                    _isDirty.value = true
                     alarmScheduler.cancelAlarm()
                     DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
                 }
@@ -97,7 +93,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                     updateTimerValue(value + ticker, ticker)
                 }, 1000)
             } else {
-                if(value == 0L && _timerTextColor.value == android.R.color.holo_blue_dark) {
+                if(value == 0L && isDirty.value == false) {
                     stopTimer()
                     getDiaperData()
                 } else { // TODO: testar remover esse código, acho que nunca vai cair aqui. Trocar o value == 0L para value <= 0

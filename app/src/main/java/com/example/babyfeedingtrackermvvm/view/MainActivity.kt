@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
@@ -15,10 +17,6 @@ import kotlin.math.abs
  * API is not being case sensitive on the station string
  */
 
-
-// TODO depois : NEXT STEP: load diaper timer duration, implementando a loadData() e timerText na viewModel
-    //criar DiaperRepository, DiaperModel?, DiaperService?, try not to create another file like APIGeneralResponse
-// -> try to use likes this:
 /*
 val responseBodyJSON = JSONObject(response.body!!.string())
 
@@ -61,19 +59,19 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        viewModel.loadUserData()
-        //viewModel.getDiaperData()
-
-        //colocar em onResume?
-        //viewModel.loadData() // TODO: essa função vai dar load em todos os dados, chamando uma função específica para cada tipo de dado
+        viewModel.loadUserData() // TODO: essa função vai dar load em todos os dados, chamando uma função específica para cada tipo de dado
 
         //Observers
         observe()
+
+        /*
 
         val alarmScheduler = AlarmScheduler(
             getSystemService(ALARM_SERVICE) as AlarmManager,
             applicationContext
         )
+
+        */
 
     }
 
@@ -87,8 +85,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun observe() {
 
-        viewModel.timerTextColor.observe(this) {
-            binding.timerText.setTextColor(getColor(it))
+        viewModel.isDirty.observe(this) {
+            if (it) {
+                Glide.with(this)
+                    .load(R.drawable.poopgif1)
+                    .into(binding.diaperImage)
+                binding.timerText.setTextColor(getColor(R.color.red))
+            } else {
+                binding.diaperImage.setImageResource(R.drawable.diaper2)
+                binding.timerText.setTextColor(getColor(android.R.color.holo_blue_dark))
+            }
         }
 
         viewModel.timerText.observe(this) {
@@ -106,13 +112,8 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
 
-        /*
-        viewModel.needToChange.observe(this) { // TODO: avisa quando tem que trocar a imagem
-
-        }
-
         //viewModel.mamadaScreenData.observe(this) {} // TODO depois: dados para atualizar a tela, fazer em object (JSON?)
-        */
+
 
         viewModel.isLoginValid.observe(this) {
             if(!it) {

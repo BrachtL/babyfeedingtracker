@@ -46,26 +46,16 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     var isTimerRunning = false
     private val handler = Handler(Looper.getMainLooper())
-    /*
-    fun setDiaperTimestamp(username: String, station: String) {
+
+    fun setDiaperTimestamp() {
         Toast.makeText(application.applicationContext, "setDiaperData() was called", Toast.LENGTH_SHORT).show()
 
-        diaperRepository.setDiaperData(username, station, object : APIListener<Long> {
-            override fun onSuccess(result: Long) {
-                if(result > 0) {
-                    _timerText.value = result
-                    startTimer(result, -1000)
-                    alarmScheduler.scheduleAlarm(result)
-                    _isDirty.value = false
-
-                } else {
-                    startTimer(-result, 1000)
-                    _timerText.value = result
-                    _isDirty.value = true
-                    alarmScheduler.cancelAlarm()
-                    DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
-                }
-
+        diaperRepository.setDiaperChangeTimestamp(username, station, object : APIListener<DiaperDataResponse> {
+            override fun onSuccess(result: DiaperDataResponse) {
+                _timerText.value = result.timerDuration
+                startTimer(result.timerDuration, -1000)
+                alarmScheduler.scheduleAlarm(result.timerDuration)
+                _isDirty.value = false
             }
 
             override fun onFailure(message: String) {
@@ -75,7 +65,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         })
     }
 
-     */
+
 
 
     fun getDiaperData() {

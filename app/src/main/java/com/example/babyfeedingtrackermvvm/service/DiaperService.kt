@@ -10,15 +10,16 @@ import retrofit2.http.Query
 
 interface DiaperService {
 
-    @GET("/getDiaperTimerDurationAndLastUsername")
-    //@GET("/getDiaperTimerDurationAndLastUsernameMOCK") // MOCK
+    //@GET("/getDiaperTimerDurationAndLastUsername")
+    @GET("/getDiaperTimerDurationAndLastUsernameMOCK") // MOCK
     fun getDiaperData(
         @Query("username") username: String,
         @Query("station") station: String
     ) : Call<DiaperDataResponse>
 
     @FormUrlEncoded
-    @POST("/setDiaperChangeTime")
+    //@POST("/setDiaperChangeTime")
+    @POST("/setDiaperChangeTimeMOCK") // MOCK
     fun setDiaperChangeTimestamp(
         @Field("username") username: String,
         @Field("station") station: String

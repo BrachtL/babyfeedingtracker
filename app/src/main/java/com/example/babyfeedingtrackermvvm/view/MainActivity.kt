@@ -15,7 +15,7 @@ import kotlin.math.abs
  * API is not being case sensitive on the station string
  */
 
-// TODO: ongoing: set diaper change
+// TODO: ongoing: 
 
 /*
 val responseBodyJSON = JSONObject(response.body!!.string())
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             //viewModel.setMamada(binding.editTextAmount)
         }
         binding.diaperImage.setOnClickListener {
-
+            viewModel.setDiaperTimestamp()
         }
 
         viewModel.loadUserData() // TODO: essa função vai dar load em todos os dados, chamando uma função específica para cada tipo de dado

@@ -20,7 +20,6 @@ class UserRepository(context: Context) : BaseRepository(context) {
     fun register(username: String, station: String, color: String, listener: APIListener<String>) {
         if(!isConnectionAvailable()) {
             listener.onFailure(context.getString(R.string.check_internet_connection))
-            // TODO: Remove HARDCODED
             return
         }
         val userModel = UserModel(

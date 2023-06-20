@@ -1,23 +1,17 @@
-package com.example.babyfeedingtrackermvvm.Alarm
+package com.example.babyfeedingtrackermvvm.alarm
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.example.babyfeedingtrackermvvm.repository.RetrofitClient
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class AlarmScheduler(val alarmManager: AlarmManager, val context: Context) : AlarmSchedulerInterface {
+class AlarmScheduler(private val alarmManager: AlarmManager, val context: Context) :
+    AlarmSchedulerInterface {
 
     override fun scheduleAlarm(alarmTime: Long) {
         val pendingIntent = createPendingIntent()
 
-        alarmManager.set(
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             System.currentTimeMillis() + alarmTime,
             pendingIntent
@@ -44,7 +38,7 @@ class AlarmScheduler(val alarmManager: AlarmManager, val context: Context) : Ala
     companion object {
         private const val REQUEST_CODE = 1
 
-        // TODO: study and fix it
+        // TODO: study and fix it (memory leak because of the context as param?)
         private lateinit var INSTANCE: AlarmScheduler
 
         fun getAlarmInstance(alarmManager: AlarmManager, context: Context): AlarmScheduler {

@@ -1,13 +1,11 @@
 package com.example.babyfeedingtrackermvvm.view
 
-import android.app.AlarmManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.babyfeedingtrackermvvm.R
-import com.example.babyfeedingtrackermvvm.alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
 import java.util.concurrent.TimeUnit
@@ -16,6 +14,8 @@ import kotlin.math.abs
 /**
  * API is not being case sensitive on the station string
  */
+
+// TODO: ongoing: set diaper change
 
 /*
 val responseBodyJSON = JSONObject(response.body!!.string())

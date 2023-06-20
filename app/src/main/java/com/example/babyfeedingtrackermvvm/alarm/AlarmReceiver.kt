@@ -6,10 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.babyfeedingtrackermvvm.listener.APIListener
+import com.example.babyfeedingtrackermvvm.model.DiaperDataResponse
 import com.example.babyfeedingtrackermvvm.repository.DiaperRepository
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 
 // TODO: não notificar se já tiver uma notificação na tela?
+// TODO: quando clicar na notif, tem que abrir o app e fechar a notif
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -29,11 +31,11 @@ class AlarmReceiver : BroadcastReceiver() {
         if(username != "" && station != "") {
             val diaperRepository = DiaperRepository(context)
 
-            diaperRepository.getDiaperData(username, station, object : APIListener<Long> {
-                override fun onSuccess(result: Long) {
+            diaperRepository.getDiaperData(username, station, object : APIListener<DiaperDataResponse> {
+                override fun onSuccess(result: DiaperDataResponse) {
                     Log.d("RESULT", "RESULT do DB no AlarmReceiver: $result")
-                    if(result > 0) {
-                        alarmScheduler.scheduleAlarm(result)
+                    if(result.timerDuration > 0) {
+                        alarmScheduler.scheduleAlarm(result.timerDuration)
                     } else {
                         DiaperChangeNotificationManager().notifyDiaperChange(context)
                         Log.d("Tentei notificar", "AlarmReceiver chamou DiaperChangeNotificationManager ")

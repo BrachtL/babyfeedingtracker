@@ -14,7 +14,18 @@ class DiaperRepository (context: Context) : BaseRepository(context) {
 
     private val remote = RetrofitClient.getService(DiaperService::class.java)
 
-    fun getDiaperData(username: String, station: String, listener: APIListener<Long>) {
+    fun setDiaperChangeTimestamp(username: String, station: String, listener: APIListener<DiaperDataResponse>) {
+        if(!isConnectionAvailable()) {
+            listener.onFailure(context.getString(R.string.check_internet_connection))
+            return
+        }
+
+        executeCall(remote.setDiaperChangeTimestamp(username, station), listener)
+    }
+
+
+
+    fun getDiaperData(username: String, station: String, listener: APIListener<DiaperDataResponse>) {
         if(!isConnectionAvailable()) {
             listener.onFailure(context.getString(R.string.check_internet_connection))
             return
@@ -24,12 +35,12 @@ class DiaperRepository (context: Context) : BaseRepository(context) {
 
     }
 
-    fun executeCall(call: Call<DiaperDataResponse>, listener: APIListener<Long>) {
+    fun executeCall(call: Call<DiaperDataResponse>, listener: APIListener<DiaperDataResponse>) {
         call.enqueue(object : Callback<DiaperDataResponse> {
             override fun onResponse(call: Call<DiaperDataResponse>, response: Response<DiaperDataResponse>) {
                 if (response.code() == 200) {
                     response.body()?.let {
-                        listener.onSuccess(it.timerDuration)
+                        listener.onSuccess(it)
                     } ?: run {
                         listener.onFailure(context.getString(R.string.empty_response_body))
                     }

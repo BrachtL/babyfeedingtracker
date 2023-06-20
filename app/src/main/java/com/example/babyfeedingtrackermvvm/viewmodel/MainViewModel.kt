@@ -14,6 +14,7 @@ import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.alarm.DiaperChangeNotificationManager
 import com.example.babyfeedingtrackermvvm.listener.APIListener
+import com.example.babyfeedingtrackermvvm.model.DiaperDataResponse
 import com.example.babyfeedingtrackermvvm.repository.DiaperRepository
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 
@@ -45,11 +46,11 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     var isTimerRunning = false
     private val handler = Handler(Looper.getMainLooper())
+    /*
+    fun setDiaperTimestamp(username: String, station: String) {
+        Toast.makeText(application.applicationContext, "setDiaperData() was called", Toast.LENGTH_SHORT).show()
 
-    fun getDiaperData() {
-        Toast.makeText(application.applicationContext, "getDiaperData() was called", Toast.LENGTH_SHORT).show()
-
-        diaperRepository.getDiaperData(username, station, object : APIListener<Long> {
+        diaperRepository.setDiaperData(username, station, object : APIListener<Long> {
             override fun onSuccess(result: Long) {
                 if(result > 0) {
                     _timerText.value = result
@@ -60,6 +61,37 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                 } else {
                     startTimer(-result, 1000)
                     _timerText.value = result
+                    _isDirty.value = true
+                    alarmScheduler.cancelAlarm()
+                    DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
+                }
+
+            }
+
+            override fun onFailure(message: String) {
+                _failureMessage.value = message
+            }
+
+        })
+    }
+
+     */
+
+
+    fun getDiaperData() {
+        Toast.makeText(application.applicationContext, "getDiaperData() was called", Toast.LENGTH_SHORT).show()
+
+        diaperRepository.getDiaperData(username, station, object : APIListener<DiaperDataResponse> { //<Long>
+            override fun onSuccess(result: DiaperDataResponse) {
+                if(result.timerDuration > 0) {
+                    _timerText.value = result.timerDuration
+                    startTimer(result.timerDuration, -1000)
+                    alarmScheduler.scheduleAlarm(result.timerDuration)
+                    _isDirty.value = false
+
+                } else {
+                    startTimer(-result.timerDuration, 1000)
+                    _timerText.value = result.timerDuration
                     _isDirty.value = true
                     alarmScheduler.cancelAlarm()
                     DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)

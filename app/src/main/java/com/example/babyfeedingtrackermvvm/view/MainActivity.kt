@@ -1,21 +1,25 @@
 package com.example.babyfeedingtrackermvvm.view
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
+import org.w3c.dom.Text
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.timer
 import kotlin.math.abs
 
 /**
  * API is not being case sensitive on the station string
  */
 
-// TODO: ongoing: 
+// TODO: ongoing:
 
 /*
 val responseBodyJSON = JSONObject(response.body!!.string())
@@ -26,6 +30,8 @@ val timeArray = responseBodyJSON.getJSONArray("timeArray")
 val amountArray = responseBodyJSON.getJSONArray("amountArray")
 val colorArray = responseBodyJSON.getJSONArray("colorArray")
 */
+
+// TODO: depois: turn gray the pressed button and disable it until get the response
 
 // TODO depois: verificar se está logado, se não estiver, mandar para a RegisterActivity
 
@@ -64,14 +70,6 @@ class MainActivity : AppCompatActivity() {
         //Observers
         observe()
 
-        /*
-
-        val alarmScheduler = AlarmScheduler(
-            getSystemService(ALARM_SERVICE) as AlarmManager,
-            applicationContext
-        )
-
-        */
 
     }
 
@@ -79,11 +77,46 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         viewModel.getDiaperData()
         Toast.makeText(this, "onResume()", Toast.LENGTH_SHORT).show()
+        viewModel.getFeedingData()
     }
 
     //functions
 
     private fun observe() {
+
+        viewModel.screenObject.observe(this) {
+
+            binding.average06.text = "06h: ${it.average06}"
+            binding.average12.text = "12h: ${it.average12}"
+            binding.average24.text = "24h: ${it.average24}"
+
+            for(i in 0 until it.usernameArray.size) {
+                val colorHex = it.colorArray[i]
+                val colorInt = Color.parseColor(colorHex)
+
+                val usernameTextView = findViewById<TextView>(
+                    resources.getIdentifier(
+                        "username$i",
+                        "id",
+                        packageName
+                    )
+                )
+                usernameTextView.text = it.usernameArray[i]
+                usernameTextView.setTextColor(colorInt)
+
+                val timeTextView = findViewById<TextView>(
+                    resources.getIdentifier("time$i", "id", packageName)
+                )
+                timeTextView.text = it.timeArray[i]
+                timeTextView.setTextColor(colorInt)
+
+                val amountTextView = findViewById<TextView>(
+                    resources.getIdentifier("amount$i", "id", packageName)
+                )
+                amountTextView.text = it.amountArray[i].toString() + "ml"
+                amountTextView.setTextColor(colorInt)
+            }
+        }
 
         viewModel.isDirty.observe(this) {
             if (it) {
@@ -98,7 +131,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.timerText.observe(this) {
-            //setar um alarm manager: quando chegar em zero, faz um novo request para a API
             val time = abs(it)
 
             val hours = TimeUnit.MILLISECONDS.toHours(time)
@@ -111,9 +143,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.failureMessage.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
-
-        //viewModel.mamadaScreenData.observe(this) {} // TODO depois: dados para atualizar a tela, fazer em object (JSON?)
-
 
         viewModel.isLoginValid.observe(this) {
             if(!it) {

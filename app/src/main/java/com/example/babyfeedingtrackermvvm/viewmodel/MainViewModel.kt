@@ -3,9 +3,11 @@ package com.example.babyfeedingtrackermvvm.viewmodel
 import android.app.AlarmManager
 import android.app.Application
 import android.content.Context.ALARM_SERVICE
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -15,7 +17,9 @@ import com.example.babyfeedingtrackermvvm.alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.alarm.DiaperChangeNotificationManager
 import com.example.babyfeedingtrackermvvm.listener.APIListener
 import com.example.babyfeedingtrackermvvm.model.DiaperDataResponse
+import com.example.babyfeedingtrackermvvm.model.FeedingDataResponse
 import com.example.babyfeedingtrackermvvm.repository.DiaperRepository
+import com.example.babyfeedingtrackermvvm.repository.FeedingRepository
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -26,6 +30,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     //instantiate repositories
     private val userPreferences = UserPreferences(application.applicationContext)
     private val diaperRepository = DiaperRepository(application.applicationContext)
+    private val feedingRepository = FeedingRepository(application.applicationContext)
 
     //instantiate MutableLiveData and LiveData to be observed
     private val _timerText = MutableLiveData<Long>()
@@ -39,6 +44,9 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     private val _isDirty = MutableLiveData<Boolean>()
     val isDirty : LiveData<Boolean> = _isDirty
+
+    private val _screenObject = MutableLiveData<FeedingDataResponse>()
+    val screenObject: LiveData<FeedingDataResponse> = _screenObject
 
     private var username: String = ""
     private var station: String = ""
@@ -65,11 +73,25 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         })
     }
 
+    fun getFeedingData() {
+        Toast.makeText(application.applicationContext, "getFeedingData() was called", Toast.LENGTH_SHORT).show()
 
+        feedingRepository.getFeedingData(username, station, object : APIListener<FeedingDataResponse> {
+            override fun onSuccess(result: FeedingDataResponse) {
+                Toast.makeText(application.applicationContext, "onSucces getFeedingData()", Toast.LENGTH_SHORT).show()
+                Log.d("getFeedingData()", "onSuccess: $result")
+                // TODO: test create a new user, without feeding data, and see if it crashes here
+                _screenObject.value = result
+            }
 
+            override fun onFailure(message: String) {
+                _failureMessage.value = message
+            }
+
+        })
+    }
 
     fun getDiaperData() {
-        Toast.makeText(application.applicationContext, "getDiaperData() was called", Toast.LENGTH_SHORT).show()
 
         diaperRepository.getDiaperData(username, station, object : APIListener<DiaperDataResponse> { //<Long>
             override fun onSuccess(result: DiaperDataResponse) {

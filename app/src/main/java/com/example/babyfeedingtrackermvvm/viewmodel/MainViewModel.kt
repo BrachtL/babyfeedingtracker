@@ -50,6 +50,12 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val _screenObject = MutableLiveData<FeedingDataResponse>()
     val screenObject: LiveData<FeedingDataResponse> = _screenObject
 
+    private val _isBottleDisabled = MutableLiveData<Boolean>()
+    val isBottleDisabled: LiveData<Boolean> = _isBottleDisabled
+
+    private val _eraseAmount = MutableLiveData<Boolean>()
+    val eraseAmount: LiveData<Boolean> = _eraseAmount
+
     private var username: String = ""
     private var station: String = ""
     //private var color: String = ""
@@ -58,14 +64,17 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     private val handler = Handler(Looper.getMainLooper())
 
     fun setFeeding(amount: Int) {
+        _isBottleDisabled.value = true
         val feedingData = FeedingDataRequest(username, station, amount)
         feedingRepository.setFeeding(feedingData, object : APIListener<APIGeneralResponse> {
             override fun onSuccess(result: APIGeneralResponse) {
+                _eraseAmount.value = true
                 getFeedingData()
                 // TODO: The API should send the new screen data, without needing to make a new request
             }
 
             override fun onFailure(message: String) {
+                _isBottleDisabled.value = false
                 _failureMessage.value = message
             }
 
@@ -101,15 +110,17 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     fun getFeedingData() {
         //Toast.makeText(application.applicationContext, "getFeedingData() was called", Toast.LENGTH_SHORT).show()
-
+        _isBottleDisabled.value = true
         feedingRepository.getFeedingData(username, station, object : APIListener<FeedingDataResponse> {
             override fun onSuccess(result: FeedingDataResponse) {
                 //Toast.makeText(application.applicationContext, "onSucces getFeedingData()", Toast.LENGTH_SHORT).show()
                 Log.d("getFeedingData()", "onSuccess: $result")
+                _isBottleDisabled.value = false
                 _screenObject.value = result
             }
 
             override fun onFailure(message: String) {
+                _isBottleDisabled.value = false
                 _failureMessage.value = message
             }
 
@@ -187,7 +198,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     }
 
 
-    // TODO depois: it needs to be tested
     fun loadUserData() {
         username = userPreferences.get("username")
         station = userPreferences.get("station")
@@ -199,6 +209,5 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             _isLoginValid.value = false
         }
     }
-
 
 }

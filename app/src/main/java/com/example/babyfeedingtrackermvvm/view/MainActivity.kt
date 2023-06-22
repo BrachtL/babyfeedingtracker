@@ -1,5 +1,6 @@
 package com.example.babyfeedingtrackermvvm.view
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,20 +19,6 @@ import kotlin.math.abs
 /**
  * API is not being case sensitive on the station string
  */
-
-/*
-val responseBodyJSON = JSONObject(response.body!!.string())
-
-val usernameArray = responseBodyJSON.getJSONArray("usernameArray")
-//val stationArray = responseBodyJSON.getJSONArray("stationArray")
-val timeArray = responseBodyJSON.getJSONArray("timeArray")
-val amountArray = responseBodyJSON.getJSONArray("amountArray")
-val colorArray = responseBodyJSON.getJSONArray("colorArray")
-*/
-
-// TODO: depois: turn gray the pressed button and disable it until get the response
-
-// TODO depois: verificar se está logado, se não estiver, mandar para a RegisterActivity
 
 // TODO depois:
     //fazer a register activity ser uma só para registro e login, com um botão de registro e outro de login
@@ -55,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        disableBottle()
+
+        viewModel.loadUserData()
+
         //Events
         binding.mamadaImage.setOnClickListener {
             if (binding.editTextAmount.text.toString() != "") {
@@ -67,12 +58,8 @@ class MainActivity : AppCompatActivity() {
             viewModel.setDiaperTimestamp()
         }
 
-        viewModel.loadUserData() // TODO: essa função vai dar load em todos os dados, chamando uma função específica para cada tipo de dado
-
         //Observers
         observe()
-
-
     }
 
     override fun onResume() {
@@ -86,6 +73,14 @@ class MainActivity : AppCompatActivity() {
     //functions
 
     private fun observe() {
+
+        viewModel.isBottleDisabled.observe(this) {
+            if (it) {
+                disableBottle()
+            } else {
+                enableBottle()
+            }
+        }
 
         viewModel.screenObject.observe(this) {
 
@@ -150,9 +145,26 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.isLoginValid.observe(this) {
             if(!it) {
-                // TODO depois: change to RegisterActivity
+                startActivity(Intent(applicationContext, RegisterActivity::class.java))
+                finish()
             }
         }
+
+        viewModel.eraseAmount.observe(this) {
+            if(it) {
+                binding.editTextAmount.setText("")
+            }
+        }
+    }
+
+    fun disableBottle() {
+        binding.mamadaImage.setImageResource(R.drawable.bottle2_bw93)
+        binding.mamadaImage.isClickable = false
+    }
+
+    fun enableBottle() {
+        binding.mamadaImage.setImageResource(R.drawable.bottle2)
+        binding.mamadaImage.isClickable = true
     }
 
 }

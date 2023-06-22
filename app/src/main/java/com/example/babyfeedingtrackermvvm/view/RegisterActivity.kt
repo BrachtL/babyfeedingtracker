@@ -89,6 +89,5 @@ class RegisterActivity: AppCompatActivity() {
     }
 }
 
-// TODO: antes de continuar -> preciso implementar o Login na API (mesmas infos do registro, sem password por enquanto), atualmente o user só registra
-    //criar RegisterActivity (e as coisas relacionadas)
+// TODO: preciso implementar o Login na API (mesmas infos do registro, sem password por enquanto), atualmente o user só registra
 // TODO: depois de terminar de refatorar o código aqui, vou implementar JWT

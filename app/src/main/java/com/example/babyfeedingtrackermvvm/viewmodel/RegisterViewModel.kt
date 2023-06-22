@@ -55,9 +55,7 @@ class RegisterViewModel(private val application: Application) : AndroidViewModel
 
             override fun onFailure(message: String) {
                 // TODO: tirar esse hardcoded do meu user name daqui quando possível
-                if(username != "Luciano") {
-                    _registerMessage.value = message
-                } else {
+                if(username == "Luciano" || username == "Marceli") {
                     //userPreferences.store("token", result.token)
                     userPreferences.store("username", username)
                     userPreferences.store("station", station)
@@ -66,7 +64,8 @@ class RegisterViewModel(private val application: Application) : AndroidViewModel
                     //RetrofitClient.addToken(result.token)
 
                     _registerMessage.value = "userIsNowOwner"
-
+                } else {
+                    _registerMessage.value = message
                 }
             }
 

@@ -2,18 +2,24 @@ package com.example.babyfeedingtrackermvvm.alarm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.babyfeedingtrackermvvm.R
+import com.example.babyfeedingtrackermvvm.view.MainActivity
 
 // TODO: trocar nome desta classe
 // TODO: testar com API 25
 // TODO: testar múltiplas calls da notifyDiaperChange para ver se atualiza sempre a mesma
 // TODO: ver como o Ferrari fez a classe fechada dele (Client eu acho)
+// TODO: Essa classe está feita errado. Estou acessando as instâncias dela, e não ela própria. Mas com companion object tem memory leak...
 class DiaperChangeNotificationManager {
+
     private lateinit var notificationManager: NotificationManager
     private lateinit var diaperChangeBuilder: NotificationCompat.Builder
 
@@ -29,6 +35,26 @@ class DiaperChangeNotificationManager {
     //notificationManager.notify(changeId, diaperChangeBuilder.build())
 
     //notificationManager.notify(checkId, diaperCheckBuilder.build())
+
+    fun removeDiaperNotification(context: Context) {
+        if (!::notificationManager.isInitialized) {
+            notificationManager = getNotificationManagerInstance(context)
+        }
+        notificationManager.cancel(changeId)
+    }
+
+    fun isThereActiveNotification(context: Context): Boolean {
+        if (!::diaperChangeBuilder.isInitialized) {
+            diaperChangeBuilder = getDiaperChangeBuilder(context)
+        }
+
+        if (!::notificationManager.isInitialized) {
+            notificationManager = getNotificationManagerInstance(context)
+        }
+
+        //if I create another notification type, I have to change this code
+        return !notificationManager.activeNotifications.isEmpty()
+    }
 
     fun notifyDiaperChange(context: Context) {
         if (!::diaperChangeBuilder.isInitialized) {
@@ -54,6 +80,7 @@ class DiaperChangeNotificationManager {
                 .setContentText("Seu bebê precisa de fraldas limpinhas")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound(defaultNotificationSoundUri)
+                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
 
             return diaperChangeBuilder
         } else {

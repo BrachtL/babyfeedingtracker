@@ -19,7 +19,7 @@ class DiaperRepository (context: Context) : BaseRepository(context) {
             listener.onFailure(context.getString(R.string.check_internet_connection))
             return
         }
-
+        Log.d("DiaperRepository", "setDiaperTimestamp: Username: $username, Station: $station")
         executeCall(remote.setDiaperChangeTimestamp(username, station), listener)
     }
 

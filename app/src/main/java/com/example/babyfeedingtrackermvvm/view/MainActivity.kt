@@ -20,6 +20,7 @@ import kotlin.math.abs
  */
 
 // TODO: ongoing:
+// TODO: commit info: BUG FIX: set diaper change was not working due to DiaperService bug; MODIFY: when dirty, schedule alarm for 15 minutes to check again; FEATURE: notification click brings MainActivity and removes the notification, do not notify if already there is a notification;
 
 /*
 val responseBodyJSON = JSONObject(response.body!!.string())
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.getDiaperData()
         Toast.makeText(this, "onResume()", Toast.LENGTH_SHORT).show()
         viewModel.getFeedingData()
+        viewModel.removeDiaperNotification()
     }
 
     //functions
@@ -86,6 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.screenObject.observe(this) {
 
+            // TODO: make it a function
             binding.average06.text = "06h: ${it.average06}"
             binding.average12.text = "12h: ${it.average12}"
             binding.average24.text = "24h: ${it.average24}"

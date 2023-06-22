@@ -17,12 +17,11 @@ interface DiaperService {
         @Query("station") station: String
     ) : Call<DiaperDataResponse>
 
-    @FormUrlEncoded
     @POST("/setDiaperChangeTime")
     //@POST("/setDiaperChangeTimeMOCK") // MOCK
     fun setDiaperChangeTimestamp(
-        @Field("username") username: String,
-        @Field("station") station: String
+        @Query("username") username: String,
+        @Query("station") station: String
     ) : Call<DiaperDataResponse>
 
 }

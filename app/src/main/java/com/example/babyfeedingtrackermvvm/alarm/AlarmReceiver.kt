@@ -36,9 +36,20 @@ class AlarmReceiver : BroadcastReceiver() {
                     Log.d("RESULT", "RESULT do DB no AlarmReceiver: $result")
                     if(result.timerDuration > 0) {
                         alarmScheduler.scheduleAlarm(result.timerDuration)
+                        if(DiaperChangeNotificationManager().isThereActiveNotification(context)) {
+                            DiaperChangeNotificationManager().removeDiaperNotification(context)
+                        }
                     } else {
-                        DiaperChangeNotificationManager().notifyDiaperChange(context)
-                        Log.d("Tentei notificar", "AlarmReceiver chamou DiaperChangeNotificationManager ")
+                        alarmScheduler.scheduleAlarm(900000L) // 15 min
+                        if(DiaperChangeNotificationManager().isThereActiveNotification(context)) {
+
+                        } else {
+                            DiaperChangeNotificationManager().notifyDiaperChange(context)
+                            Log.d(
+                                "Tentei notificar",
+                                "AlarmReceiver chamou DiaperChangeNotificationManager "
+                            )
+                        }
                     }
 
                 }

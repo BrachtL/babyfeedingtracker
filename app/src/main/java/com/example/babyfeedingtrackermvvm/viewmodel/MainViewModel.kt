@@ -55,11 +55,20 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     var isTimerRunning = false
     private val handler = Handler(Looper.getMainLooper())
 
+    fun removeDiaperNotification() {
+        // TODO: this isThereActiveNotification should be treated in the DiaperChangeNotificationManager()
+        if(DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
+            DiaperChangeNotificationManager().removeDiaperNotification(application.applicationContext)
+        }
+    }
+
     fun setDiaperTimestamp() {
         Toast.makeText(application.applicationContext, "setDiaperData() was called", Toast.LENGTH_SHORT).show()
+        Log.d("setDiaperTimestamp", "setDiaperTimestamp: Username: $username, Station: $station")
 
         diaperRepository.setDiaperChangeTimestamp(username, station, object : APIListener<DiaperDataResponse> {
             override fun onSuccess(result: DiaperDataResponse) {
+                removeDiaperNotification()
                 _timerText.value = result.timerDuration
                 startTimer(result.timerDuration, -1000)
                 alarmScheduler.scheduleAlarm(result.timerDuration)
@@ -100,13 +109,19 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                     startTimer(result.timerDuration, -1000)
                     alarmScheduler.scheduleAlarm(result.timerDuration)
                     _isDirty.value = false
+                    if(DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
+                        DiaperChangeNotificationManager().removeDiaperNotification(application.applicationContext)
+                    }
 
                 } else {
                     startTimer(-result.timerDuration, 1000)
                     _timerText.value = result.timerDuration
                     _isDirty.value = true
                     alarmScheduler.cancelAlarm()
-                    DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
+                    alarmScheduler.scheduleAlarm(900000L) //15 min
+                    if(!DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
+                        DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
+                    }
                 }
 
             }

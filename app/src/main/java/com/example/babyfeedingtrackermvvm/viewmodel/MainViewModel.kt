@@ -26,8 +26,7 @@ import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 
 class MainViewModel(private val application: Application) : AndroidViewModel(application) {
 
-    private val alarmScheduler = AlarmScheduler.getAlarmInstance(application.applicationContext.getSystemService(ALARM_SERVICE) as AlarmManager,
-        application.applicationContext)
+    private val alarmScheduler = AlarmScheduler.getAlarmInstance(application.applicationContext.getSystemService(ALARM_SERVICE) as AlarmManager)
 
     //instantiate repositories
     private val userPreferences = UserPreferences(application.applicationContext)
@@ -97,7 +96,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                 removeDiaperNotification()
                 _timerText.value = result.timerDuration
                 startTimer(result.timerDuration, -1000)
-                alarmScheduler.scheduleAlarm(result.timerDuration)
+                alarmScheduler.scheduleAlarm(result.timerDuration, application.applicationContext)
                 _isDirty.value = false
             }
 
@@ -134,7 +133,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                 if(result.timerDuration > 0) {
                     _timerText.value = result.timerDuration
                     startTimer(result.timerDuration, -1000)
-                    alarmScheduler.scheduleAlarm(result.timerDuration)
+                    alarmScheduler.scheduleAlarm(result.timerDuration, application.applicationContext)
                     _isDirty.value = false
                     if(DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
                         DiaperChangeNotificationManager().removeDiaperNotification(application.applicationContext)
@@ -144,8 +143,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                     startTimer(-result.timerDuration, 1000)
                     _timerText.value = result.timerDuration
                     _isDirty.value = true
-                    alarmScheduler.cancelAlarm()
-                    alarmScheduler.scheduleAlarm(900000L) //15 min
+                    alarmScheduler.cancelAlarm(application.applicationContext)
+                    alarmScheduler.scheduleAlarm(900000L, application.applicationContext) //15 min
                     if(!DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
                         DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
                     }

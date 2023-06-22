@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
@@ -27,6 +28,7 @@ import kotlin.math.abs
 
     //do the logic for deactivate login button after click it (new file?)
 
+//@GlideModule
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel

@@ -16,8 +16,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val alarmScheduler = AlarmScheduler.getAlarmInstance(context.getSystemService(
             Context.ALARM_SERVICE
-        ) as AlarmManager,
-            context)
+        ) as AlarmManager)
 
         val userPreferences = UserPreferences(context)
         val username = userPreferences.get("username")
@@ -33,12 +32,12 @@ class AlarmReceiver : BroadcastReceiver() {
                 override fun onSuccess(result: DiaperDataResponse) {
                     Log.d("RESULT", "RESULT do DB no AlarmReceiver: $result")
                     if(result.timerDuration > 0) {
-                        alarmScheduler.scheduleAlarm(result.timerDuration)
+                        alarmScheduler.scheduleAlarm(result.timerDuration, context)
                         if(DiaperChangeNotificationManager().isThereActiveNotification(context)) {
                             DiaperChangeNotificationManager().removeDiaperNotification(context)
                         }
                     } else {
-                        alarmScheduler.scheduleAlarm(900000L) // 15 min
+                        alarmScheduler.scheduleAlarm(900000L, context) // 15 min
                         if(DiaperChangeNotificationManager().isThereActiveNotification(context)) {
 
                         } else {

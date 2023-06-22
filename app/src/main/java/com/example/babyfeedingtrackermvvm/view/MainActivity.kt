@@ -19,9 +19,6 @@ import kotlin.math.abs
  * API is not being case sensitive on the station string
  */
 
-// TODO: ongoing:
-// TODO: commit info: BUG FIX: set diaper change was not working due to DiaperService bug; MODIFY: when dirty, schedule alarm for 15 minutes to check again; FEATURE: notification click brings MainActivity and removes the notification, do not notify if already there is a notification;
-
 /*
 val responseBodyJSON = JSONObject(response.body!!.string())
 
@@ -60,7 +57,11 @@ class MainActivity : AppCompatActivity() {
 
         //Events
         binding.mamadaImage.setOnClickListener {
-            //viewModel.setMamada(binding.editTextAmount)
+            if (binding.editTextAmount.text.toString() != "") {
+                viewModel.setFeeding(binding.editTextAmount.text.toString().toInt())
+            } else {
+                viewModel.getFeedingData()
+            }
         }
         binding.diaperImage.setOnClickListener {
             viewModel.setDiaperTimestamp()

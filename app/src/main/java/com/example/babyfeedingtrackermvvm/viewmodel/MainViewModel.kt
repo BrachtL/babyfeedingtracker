@@ -16,7 +16,9 @@ import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.alarm.AlarmScheduler
 import com.example.babyfeedingtrackermvvm.alarm.DiaperChangeNotificationManager
 import com.example.babyfeedingtrackermvvm.listener.APIListener
+import com.example.babyfeedingtrackermvvm.model.APIGeneralResponse
 import com.example.babyfeedingtrackermvvm.model.DiaperDataResponse
+import com.example.babyfeedingtrackermvvm.model.FeedingDataRequest
 import com.example.babyfeedingtrackermvvm.model.FeedingDataResponse
 import com.example.babyfeedingtrackermvvm.repository.DiaperRepository
 import com.example.babyfeedingtrackermvvm.repository.FeedingRepository
@@ -55,6 +57,21 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     var isTimerRunning = false
     private val handler = Handler(Looper.getMainLooper())
 
+    fun setFeeding(amount: Int) {
+        val feedingData = FeedingDataRequest(username, station, amount)
+        feedingRepository.setFeeding(feedingData, object : APIListener<APIGeneralResponse> {
+            override fun onSuccess(result: APIGeneralResponse) {
+                getFeedingData()
+                // TODO: The API should send the new screen data, without needing to make a new request
+            }
+
+            override fun onFailure(message: String) {
+                _failureMessage.value = message
+            }
+
+        })
+    }
+
     fun removeDiaperNotification() {
         // TODO: this isThereActiveNotification should be treated in the DiaperChangeNotificationManager()
         if(DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
@@ -63,7 +80,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     }
 
     fun setDiaperTimestamp() {
-        Toast.makeText(application.applicationContext, "setDiaperData() was called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(application.applicationContext, "setDiaperData() was called", Toast.LENGTH_SHORT).show()
         Log.d("setDiaperTimestamp", "setDiaperTimestamp: Username: $username, Station: $station")
 
         diaperRepository.setDiaperChangeTimestamp(username, station, object : APIListener<DiaperDataResponse> {
@@ -83,13 +100,12 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     }
 
     fun getFeedingData() {
-        Toast.makeText(application.applicationContext, "getFeedingData() was called", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(application.applicationContext, "getFeedingData() was called", Toast.LENGTH_SHORT).show()
 
         feedingRepository.getFeedingData(username, station, object : APIListener<FeedingDataResponse> {
             override fun onSuccess(result: FeedingDataResponse) {
-                Toast.makeText(application.applicationContext, "onSucces getFeedingData()", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(application.applicationContext, "onSucces getFeedingData()", Toast.LENGTH_SHORT).show()
                 Log.d("getFeedingData()", "onSuccess: $result")
-                // TODO: test create a new user, without feeding data, and see if it crashes here
                 _screenObject.value = result
             }
 
@@ -102,7 +118,7 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
     fun getDiaperData() {
 
-        diaperRepository.getDiaperData(username, station, object : APIListener<DiaperDataResponse> { //<Long>
+        diaperRepository.getDiaperData(username, station, object : APIListener<DiaperDataResponse> {
             override fun onSuccess(result: DiaperDataResponse) {
                 if(result.timerDuration > 0) {
                     _timerText.value = result.timerDuration

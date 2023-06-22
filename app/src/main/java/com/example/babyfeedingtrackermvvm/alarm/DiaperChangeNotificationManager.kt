@@ -7,15 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.view.MainActivity
 
-// TODO: trocar nome desta classe
-// TODO: testar com API 25
-// TODO: testar múltiplas calls da notifyDiaperChange para ver se atualiza sempre a mesma
 // TODO: ver como o Ferrari fez a classe fechada dele (Client eu acho)
 // TODO: Essa classe está feita errado. Estou acessando as instâncias dela, e não ela própria. Mas com companion object tem memory leak...
 class DiaperChangeNotificationManager {
@@ -80,7 +76,7 @@ class DiaperChangeNotificationManager {
                 .setContentText("Seu bebê precisa de fraldas limpinhas")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound(defaultNotificationSoundUri)
-                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
 
             return diaperChangeBuilder
         } else {

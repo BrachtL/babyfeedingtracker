@@ -10,8 +10,6 @@ import com.example.babyfeedingtrackermvvm.model.DiaperDataResponse
 import com.example.babyfeedingtrackermvvm.repository.DiaperRepository
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 
-// TODO: não notificar se já tiver uma notificação na tela?
-// TODO: quando clicar na notif, tem que abrir o app e fechar a notif
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

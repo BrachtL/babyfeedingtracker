@@ -8,13 +8,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.databinding.ActivityMainBinding
+import com.example.babyfeedingtrackermvvm.model.FeedingDataResponse
 import com.example.babyfeedingtrackermvvm.viewmodel.MainViewModel
-import org.w3c.dom.Text
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.timer
 import kotlin.math.abs
 
 /**
@@ -25,8 +23,6 @@ import kotlin.math.abs
     //fazer a register activity ser uma só para registro e login, com um botão de registro e outro de login
     //se um usuário pendente tentar logar, falar que está pendente e perguntar se quer cancelar
     //criar logout button
-
-    //do the logic for deactivate login button after click it (new file?)
 
 //@GlideModule
 class MainActivity : AppCompatActivity() {
@@ -70,7 +66,9 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "onResume()", Toast.LENGTH_SHORT).show()
         viewModel.getFeedingData()
         viewModel.removeDiaperNotification()
+        //check jwt here, maybe update it
     }
+
 
     //functions
 
@@ -85,38 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.screenObject.observe(this) {
-
-            // TODO: make it a function
-            binding.average06.text = "06h: ${it.average06}"
-            binding.average12.text = "12h: ${it.average12}"
-            binding.average24.text = "24h: ${it.average24}"
-
-            for(i in 0 until it.usernameArray.size) {
-                val colorHex = it.colorArray[i]
-                val colorInt = Color.parseColor(colorHex)
-
-                val usernameTextView = findViewById<TextView>(
-                    resources.getIdentifier(
-                        "username$i",
-                        "id",
-                        packageName
-                    )
-                )
-                usernameTextView.text = it.usernameArray[i]
-                usernameTextView.setTextColor(colorInt)
-
-                val timeTextView = findViewById<TextView>(
-                    resources.getIdentifier("time$i", "id", packageName)
-                )
-                timeTextView.text = it.timeArray[i]
-                timeTextView.setTextColor(colorInt)
-
-                val amountTextView = findViewById<TextView>(
-                    resources.getIdentifier("amount$i", "id", packageName)
-                )
-                amountTextView.text = it.amountArray[i].toString() + "ml"
-                amountTextView.setTextColor(colorInt)
-            }
+            printFeedingScreenData(it)
         }
 
         viewModel.isDirty.observe(this) {
@@ -159,12 +126,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun disableBottle() {
+    private fun printFeedingScreenData(screenObject: FeedingDataResponse) {
+        binding.average06.text = "06h: ${screenObject.average06}"
+        binding.average12.text = "12h: ${screenObject.average12}"
+        binding.average24.text = "24h: ${screenObject.average24}"
+
+        for(i in 0 until screenObject.usernameArray.size) {
+            val colorHex = screenObject.colorArray[i]
+            val colorInt = Color.parseColor(colorHex)
+
+            val usernameTextView = findViewById<TextView>(
+                resources.getIdentifier(
+                    "username$i",
+                    "id",
+                    packageName
+                )
+            )
+            usernameTextView.text = screenObject.usernameArray[i]
+            usernameTextView.setTextColor(colorInt)
+
+            val timeTextView = findViewById<TextView>(
+                resources.getIdentifier("time$i", "id", packageName)
+            )
+            timeTextView.text = screenObject.timeArray[i]
+            timeTextView.setTextColor(colorInt)
+
+            val amountTextView = findViewById<TextView>(
+                resources.getIdentifier("amount$i", "id", packageName)
+            )
+            amountTextView.text = screenObject.amountArray[i].toString() + "ml"
+            amountTextView.setTextColor(colorInt)
+        }
+    }
+
+    private fun disableBottle() {
         binding.mamadaImage.setImageResource(R.drawable.bottle2_bw93)
         binding.mamadaImage.isClickable = false
     }
 
-    fun enableBottle() {
+    private fun enableBottle() {
         binding.mamadaImage.setImageResource(R.drawable.bottle2)
         binding.mamadaImage.isClickable = true
     }

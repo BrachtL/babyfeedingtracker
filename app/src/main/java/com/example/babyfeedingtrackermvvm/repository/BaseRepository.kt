@@ -6,7 +6,6 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.listener.APIListener
-import com.example.babyfeedingtrackermvvm.model.FeedingDataResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,8 +40,10 @@ open class BaseRepository(val context: Context) {
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
+                //I am not using the call.message here. I should use when refactor API.
+
                 listener.onFailure(context.getString(R.string.error_try_again))
-                Log.d("getFeedingData()", "onFailure: $t")
+                Log.d("executeCall", "onFailure: $t")
             }
         })
     }

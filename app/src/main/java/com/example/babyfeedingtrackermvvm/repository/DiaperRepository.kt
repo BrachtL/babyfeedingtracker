@@ -20,9 +20,8 @@ class DiaperRepository (context: Context) : BaseRepository(context) {
             return
         }
         Log.d("DiaperRepository", "setDiaperTimestamp: Username: $username, Station: $station")
-        executeCall(remote.setDiaperChangeTimestamp(username, station), listener)
+        executeCallT(remote.setDiaperChangeTimestamp(username, station), listener)
     }
-
 
 
     fun getDiaperData(username: String, station: String, listener: APIListener<DiaperDataResponse>) {
@@ -31,29 +30,6 @@ class DiaperRepository (context: Context) : BaseRepository(context) {
             return
         }
 
-        executeCall(remote.getDiaperData(username, station), listener)
-
+        executeCallT(remote.getDiaperData(username, station), listener)
     }
-
-    fun executeCall(call: Call<DiaperDataResponse>, listener: APIListener<DiaperDataResponse>) {
-        call.enqueue(object : Callback<DiaperDataResponse> {
-            override fun onResponse(call: Call<DiaperDataResponse>, response: Response<DiaperDataResponse>) {
-                if (response.code() == 200) {
-                    response.body()?.let {
-                        listener.onSuccess(it)
-                    } ?: run {
-                        listener.onFailure(context.getString(R.string.empty_response_body))
-                    }
-                } else {
-                    listener.onFailure(context.getString(R.string.failed_status_code, response.code()))
-                }
-            }
-
-            override fun onFailure(call: Call<DiaperDataResponse>, t: Throwable) {
-                listener.onFailure(context.getString(R.string.error_try_again))
-                Log.d("TOO MUCH TIME?", "onFailure: $t")
-            }
-        })
-    }
-
 }

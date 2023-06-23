@@ -31,29 +31,6 @@ class FeedingRepository(context: Context) : BaseRepository(context) {
             return
         }
 
-        // TODO: test executeCallT here and in every place
-        executeCall(remote.getFeedingData(username, station), listener)
+        executeCallT(remote.getFeedingData(username, station), listener)
     }
-
-    fun executeCall(call: Call<FeedingDataResponse>, listener: APIListener<FeedingDataResponse>) {
-        call.enqueue(object : Callback<FeedingDataResponse> {
-            override fun onResponse(call: Call<FeedingDataResponse>, response: Response<FeedingDataResponse>) {
-                if (response.code() == 200) {
-                    response.body()?.let {
-                        listener.onSuccess(it)
-                    } ?: run {
-                        listener.onFailure(context.getString(R.string.empty_response_body))
-                    }
-                } else {
-                    listener.onFailure(context.getString(R.string.failed_status_code, response.code()))
-                }
-            }
-
-            override fun onFailure(call: Call<FeedingDataResponse>, t: Throwable) {
-                listener.onFailure(context.getString(R.string.error_try_again))
-                Log.d("getFeedingData()", "onFailure: $t")
-            }
-        })
-    }
-
 }

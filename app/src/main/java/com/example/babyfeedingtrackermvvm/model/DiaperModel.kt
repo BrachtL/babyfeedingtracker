@@ -2,6 +2,7 @@ package com.example.babyfeedingtrackermvvm.model
 
 import com.google.gson.annotations.SerializedName
 
+// this is not being used
 data class DiaperModel(val a: String
 
     /*

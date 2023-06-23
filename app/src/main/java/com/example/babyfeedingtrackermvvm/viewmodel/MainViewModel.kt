@@ -69,19 +69,18 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             override fun onSuccess(result: APIGeneralResponse) {
                 _eraseAmount.value = true
                 getFeedingData()
-                // TODO: The API should send the new screen data, without needing to make a new request
+                // TODO: API should send the new screen data, without needing to make a new request
             }
 
             override fun onFailure(message: String) {
                 _isBottleDisabled.value = false
                 _failureMessage.value = message
             }
-
         })
     }
 
     fun removeDiaperNotification() {
-        // TODO: this isThereActiveNotification should be treated in the DiaperChangeNotificationManager()
+        //do these verifications in DiaperChangeNotificationManager instead of here?
         if(DiaperChangeNotificationManager().isThereActiveNotification(application.applicationContext)) {
             DiaperChangeNotificationManager().removeDiaperNotification(application.applicationContext)
         }
@@ -103,7 +102,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             override fun onFailure(message: String) {
                 _failureMessage.value = message
             }
-
         })
     }
 
@@ -122,7 +120,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                 _isBottleDisabled.value = false
                 _failureMessage.value = message
             }
-
         })
     }
 
@@ -149,7 +146,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                         DiaperChangeNotificationManager().notifyDiaperChange(application.applicationContext)
                     }
                 }
-
             }
 
             override fun onFailure(message: String) {
@@ -186,7 +182,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                         updateTimerValue(value + ticker, ticker)
                     }, 1000)
                 }
-
             }
         }
     }
@@ -204,9 +199,8 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
 
         Log.d("User Logado é", "loadUserData: $username, $station")
 
-        if(username == "" || station == "") {
+        if (username == "" || station == "") {
             _isLoginValid.value = false
         }
     }
-
 }

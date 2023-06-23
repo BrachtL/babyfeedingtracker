@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.view.MainActivity
 
-// TODO: ver como o Ferrari fez a classe fechada dele (Client eu acho)
-// TODO: Essa classe está feita errado. Estou acessando as instâncias dela, e não ela própria. Mas com companion object tem memory leak...
+
+// TODO: Essa classe parece meio errada. Estou acessando as instâncias dela, e não ela própria. Mas com companion object tem memory leak...
 class DiaperChangeNotificationManager {
 
     private lateinit var notificationManager: NotificationManager
@@ -27,10 +27,6 @@ class DiaperChangeNotificationManager {
     val checkId = 1 // a unique id for the notification each time it appears
     val changeId = 2
 
-    //notificationManager.cancel(checkId)
-    //notificationManager.notify(changeId, diaperChangeBuilder.build())
-
-    //notificationManager.notify(checkId, diaperCheckBuilder.build())
 
     fun removeDiaperNotification(context: Context) {
         if (!::notificationManager.isInitialized) {

@@ -46,7 +46,7 @@ class RegisterActivity: AppCompatActivity() {
         viewModel.registerMessage.observe(this) {
 
             //cases:
-                //"userAlreadyInTheStation" -> dont change activity, try again (cai no else)
+                //"userAlreadyInTheStation" -> dont change activity: choose another name (or log in)
                 //"userIsNowPending" -> change to MainActivity (in the future -> change to a PendingActivity and user has to wait the approval, or cancel the request)
                     //3 things take user out this PendingActivity: cancel button, be approved by the owner or be rejected by the owner
                 //"userIsNowOwner" -> change activity
@@ -90,4 +90,4 @@ class RegisterActivity: AppCompatActivity() {
 }
 
 // TODO: preciso implementar o Login na API (mesmas infos do registro, sem password por enquanto), atualmente o user só registra
-// TODO: depois de terminar de refatorar o código aqui, vou implementar JWT
+// TODO: JWT

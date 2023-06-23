@@ -1,17 +1,14 @@
 package com.example.babyfeedingtrackermvvm.viewmodel
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.babyfeedingtrackermvvm.R
 import com.example.babyfeedingtrackermvvm.listener.APIListener
-import com.example.babyfeedingtrackermvvm.model.UserModel
-import com.example.babyfeedingtrackermvvm.repository.RetrofitClient
+import com.example.babyfeedingtrackermvvm.model.APIGeneralResponse
 import com.example.babyfeedingtrackermvvm.repository.UserPreferences
 import com.example.babyfeedingtrackermvvm.repository.UserRepository
-import okhttp3.ResponseBody
 
 class RegisterViewModel(private val application: Application) : AndroidViewModel(application) {
 
@@ -37,40 +34,36 @@ class RegisterViewModel(private val application: Application) : AndroidViewModel
             return
         }
 
-        userRepository.register(username, station, color, object : APIListener<String> {
-            override fun onSuccess(result: String) {
+        userRepository.register(username, station, color, object : APIListener<APIGeneralResponse> {
+            override fun onSuccess(result: APIGeneralResponse) {
 
                 //when create PendingActivity, remove this "userIsNowPending" case from here
-                if(result == "userIsNowOwner" || result == "userIsNowPending") {
+                // TODO: remove this hardcoded from my username as soon as I create the JWT login in API
+                if (result.message == "userIsNowOwner" || result.message == "userIsNowPending") {
                     //userPreferences.store("token", result.token)
                     userPreferences.store("username", username)
                     userPreferences.store("station", station)
                     userPreferences.store("userColor", color)
 
                     //RetrofitClient.addToken(result.token)
-                }
 
-                _registerMessage.value = result
-            }
+                    _registerMessage.value = result.message
+                } else if(username == "Luciano" || username == "Marceli") {
 
-            override fun onFailure(message: String) {
-                // TODO: tirar esse hardcoded do meu user name daqui quando possível
-                if(username == "Luciano" || username == "Marceli") {
-                    //userPreferences.store("token", result.token)
                     userPreferences.store("username", username)
                     userPreferences.store("station", station)
                     userPreferences.store("userColor", color)
-
-                    //RetrofitClient.addToken(result.token)
 
                     _registerMessage.value = "userIsNowOwner"
                 } else {
-                    _registerMessage.value = message
+                    _registerMessage.value = result.message
                 }
             }
 
+            override fun onFailure(message: String) {
+                _registerMessage.value = message
+            }
         })
-
     }
 
     private fun validateRegisterField(userInput: String, minLength: Int, maxLength: Int, forbiddenChars: String): Boolean {

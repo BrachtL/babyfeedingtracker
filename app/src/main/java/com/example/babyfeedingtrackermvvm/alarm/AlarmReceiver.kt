@@ -52,11 +52,11 @@ class AlarmReceiver : BroadcastReceiver() {
                 }
 
                 override fun onFailure(message: String) {
-                    // TODO: acredito que não faz nada também
+                    //do nothing, because it runs in background. User doesn't need to see the message.
                 }
             })
         } else {
-            // TODO: what to do if the user was not logged, for some reason, at this point? What I need to check before changing the activity?
+            //do nothing, because it runs in background. There is other proper moments to change the activity and notify the user
         }
 
     }
